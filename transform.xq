@@ -62,7 +62,7 @@ declare function tfm:named-mode(
         let $predicate := $annotation($f, xs:QName("tfm:pattern"))
         return
           if(empty($predicate)) then error(xs:QName("tfm:NOPATTERN"),
-            concat("No pattern specified on function: ", function-name($f), "#", function-arity($f)))
+            "No pattern specified on function: " || function-name($f) || "#" || function-arity($f))
           else tfm:rule($predicate, $f)
     )
 };

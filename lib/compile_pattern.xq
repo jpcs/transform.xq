@@ -33,7 +33,7 @@ declare function pat:compile-pattern(
   return
     typeswitch($preds)
       case empty-sequence() return error(xs:QName("tfm:BADPATTERN"),
-        concat("Invalid pattern: ", $parse))
+        "Invalid pattern: " || $parse)
 
       case function(*) return $preds
 
@@ -80,7 +80,7 @@ declare function pat:compile-path($path,$resolver)
       fold-left(pat:compile-step(?,?,$resolver), (),
         $path/(PatternStep|DescendantPattern))
     default return error(xs:QName("tfm:BADPATH"),
-      concat("Invalid path: ", $path))
+      "Invalid path: " || $path)
 };
 
 declare function pat:node-type($f as function(node()) as xs:boolean)
@@ -135,7 +135,7 @@ declare function pat:compile-step($prev, $step, $resolver)
           else function($n) { false() } (: You only get attributes on the attribute axis :)
       else pat:compile-nodetest($prev,$step/NodeTest/*,pat:element-type#1,$resolver)
     default return error(xs:QName("tfm:BADSTEP"),
-      concat("Invalid step: ", $step))
+      "Invalid step: " || $step)
 };
 
 declare function pat:compile-nodetest($prev, $nt, $default-type, $resolver)
@@ -166,11 +166,11 @@ declare function pat:compile-nodetest($prev, $nt, $default-type, $resolver)
         case $et as element(ElementTest) return
           pat:element-type(pat:compile-nametest($prev,$et/(QName|Star),$resolver))
         default return error(xs:QName("tfm:BADKINDTEST"),
-          concat("Invalid kind test: ", $nt/*))
+          "Invalid kind test: " || $nt/*)
     case element(NameTest) return
       $default-type(pat:compile-nametest($prev,$nt/*,$resolver))
     default return error(xs:QName("tfm:BADNODETEST"),
-      concat("Invalid node test: ", $nt))
+      "Invalid node test: " || $nt)
 };
 
 declare function pat:compile-pitest($prev, $pt, $resolver)
@@ -192,7 +192,7 @@ declare function pat:compile-pitest($prev, $pt, $resolver)
           (empty($prev) or $prev($n/..))
       }
     default return error(xs:QName("tfm:BADNODETEST"),
-      concat("Invalid node test: ", $pt))
+      "Invalid node test: " || $pt)
 };
 
 declare function pat:unescape-string($val as xs:string)
@@ -214,7 +214,7 @@ declare function pat:compile-nametest($prev, $qn, $resolver)
   typeswitch($qn)
     case element(NCNameColonStar) return
       let $prefix := substring-before($qn,"*")
-      let $ns := namespace-uri-from-QName($resolver(concat($prefix,"fake")))
+      let $ns := namespace-uri-from-QName($resolver($prefix || "fake"))
       return function($n) {
         namespace-uri($n) eq $ns and
           (empty($prev) or $prev($n/..))
@@ -236,5 +236,5 @@ declare function pat:compile-nametest($prev, $qn, $resolver)
           (empty($prev) or $prev($n/..))
       }
     default return error(xs:QName("tfm:BADNAMETEST"),
-      concat("Invalid name test: ", $qn))
+      "Invalid name test: " || $qn)
 };
