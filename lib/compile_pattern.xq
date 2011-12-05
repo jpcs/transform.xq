@@ -1,4 +1,4 @@
-xquery version "3.0-ml";
+xquery version "3.0";
 
 (:
  : Copyright (c) 2011 John Snelson
@@ -54,14 +54,14 @@ declare function pat:compile-pattern(
         pat:node-type(pat:or($preds))
 };
 
-declare function pat:or($preds)
+declare %private function pat:or($preds)
 {
   function($n) {
-    some $f in $preds satisfies try { $f($n) } catch($e) { false() } (: TBD 3.0 try/catch :)
+    some $f in $preds satisfies try { $f($n) } catch * { false() }
   }
 };
 
-declare function pat:compile-path($path,$resolver)
+declare %private function pat:compile-path($path,$resolver)
 {
   typeswitch($path)
     case $root as element(RootPattern) return
@@ -83,42 +83,42 @@ declare function pat:compile-path($path,$resolver)
       "Invalid path: " || $path)
 };
 
-declare function pat:node-type($f as function(node()) as xs:boolean)
+declare %private function pat:node-type($f as function(node()) as xs:boolean)
 {
   $f
 };
 
-declare function pat:document-type($f as function(document-node()) as xs:boolean)
+declare %private function pat:document-type($f as function(document-node()) as xs:boolean)
 {
   $f
 };
 
-declare function pat:element-type($f as function(element()) as xs:boolean)
+declare %private function pat:element-type($f as function(element()) as xs:boolean)
 {
   $f
 };
 
-declare function pat:attribute-type($f as function(attribute()) as xs:boolean)
+declare %private function pat:attribute-type($f as function(attribute()) as xs:boolean)
 {
   $f
 };
 
-declare function pat:comment-type($f as function(comment()) as xs:boolean)
+declare %private function pat:comment-type($f as function(comment()) as xs:boolean)
 {
   $f
 };
 
-declare function pat:text-type($f as function(text()) as xs:boolean)
+declare %private function pat:text-type($f as function(text()) as xs:boolean)
 {
   $f
 };
 
-declare function pat:pi-type($f as function(processing-instruction()) as xs:boolean)
+declare %private function pat:pi-type($f as function(processing-instruction()) as xs:boolean)
 {
   $f
 };
 
-declare function pat:compile-step($prev, $step, $resolver)
+declare %private function pat:compile-step($prev, $step, $resolver)
 {
   typeswitch($step)
     case element(DescendantPattern) return
@@ -138,7 +138,7 @@ declare function pat:compile-step($prev, $step, $resolver)
       "Invalid step: " || $step)
 };
 
-declare function pat:compile-nodetest($prev, $nt, $default-type, $resolver)
+declare %private function pat:compile-nodetest($prev, $nt, $default-type, $resolver)
 {
   typeswitch($nt)
     case element(KindTest) return
@@ -173,7 +173,7 @@ declare function pat:compile-nodetest($prev, $nt, $default-type, $resolver)
       "Invalid node test: " || $nt)
 };
 
-declare function pat:compile-pitest($prev, $pt, $resolver)
+declare %private function pat:compile-pitest($prev, $pt, $resolver)
 {
   typeswitch($pt/(NCName|StringLiteral))
     case empty-sequence() return
@@ -195,7 +195,7 @@ declare function pat:compile-pitest($prev, $pt, $resolver)
       "Invalid node test: " || $pt)
 };
 
-declare function pat:unescape-string($val as xs:string)
+declare %private function pat:unescape-string($val as xs:string)
   as xs:string
 {
   let $replace := substring($val,1,1)
@@ -209,7 +209,7 @@ declare function pat:unescape-string($val as xs:string)
   ,"")
 };
 
-declare function pat:compile-nametest($prev, $qn, $resolver)
+declare %private function pat:compile-nametest($prev, $qn, $resolver)
 {
   typeswitch($qn)
     case element(NCNameColonStar) return

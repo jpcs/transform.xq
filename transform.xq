@@ -1,4 +1,4 @@
-xquery version "3.0-ml";
+xquery version "3.0";
 
 (:
  : Copyright (c) 2011 John Snelson
@@ -16,18 +16,34 @@ xquery version "3.0-ml";
  : limitations under the License.
  :)
 
-(:~ transform.xq - An extensible transformation library for XQuery 3.0 :)
+(:~
+ : <h1>transform.xq</h1>
+ : <p>An extensible transformation library for XQuery 3.0.</p>
+ :
+ : @author John Snelson
+ : @version 0.9
+ :)
 module namespace tfm = "http://snelson.org.uk/functions/transform";
 
 import module namespace pat = "http://snelson.org.uk/functions/patterns" at "lib/compile_pattern.xq";
-import module namespace map = "http://snelson.org.uk/functions/map" at "lib/map.xq"; (: TBD private annotation :)
+import module namespace map = "http://snelson.org.uk/functions/map" at "lib/map.xq";
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
 (:~ Magic value to get a mode function to return its map of rules :)
 declare variable $tfm:magic as element() := <magic/>;
 
-(:~ Returns the mode function, that performs the transformation :)
+(:~
+ : Returns a mode function, which can be called to perform the transformation
+ : specified by the rules passed in as arguments. Call tfm:rule(), or
+ : tfm:predicate-rule() to create rules to pass into this function.
+ :
+ : @param rules: The sequence of rules to use to create the mode, in
+ : increasing precedence.
+ : @return A mode function.
+ :
+ : @see rule#2, rule#3, predicate-rule#2
+ :)
 declare function tfm:mode(
   $rules as (function(xs:string) as function(*)?)*
 ) as function(node()*) as item()*
@@ -36,6 +52,19 @@ declare function tfm:mode(
   return tfm:run-mode($map,?)
 };
 
+(:~
+ : Returns a new mode function, which extends the transformation from the
+ : mode argument, adding the additional rules in higher precedence.
+ : Call tfm:rule(), or tfm:predicate-rule() to create rules to pass into
+ : this function.
+ :
+ : @param mode: The mode to extend.
+ : @param rules: The sequence of rules to use to create the mode, in
+ : increasing precedence.
+ : @return A mode function.
+ :
+ : @see rule#2, rule#3, predicate-rule#2
+ :)
 declare function tfm:extend-mode(
   $mode as function(node()*) as item()*,
   $rules as (function(xs:string) as function(*)?)*
@@ -46,8 +75,17 @@ declare function tfm:extend-mode(
   return tfm:run-mode($map,?)
 };
 
-(:~ Returns a mode function constructed from the functions
-at runtime annotated with the given name :)
+(:~
+ : Returns a mode function constructed from the functions
+ : annotated with the given name, using the %tfm:mode() annotation.
+ :
+ : @param name: The name used in the %tfm:mode() annotation in the
+ : functions for the mode to construct.
+ : @return A mode function.
+ :
+ : @error If reflection capabilites are not supported by your XQuery
+ : implementation.
+ :)
 declare function tfm:named-mode(
   $name as xs:string
 ) as function(node()*) as item()*
@@ -69,21 +107,21 @@ declare function tfm:named-mode(
     )
 };
 
-declare function tfm:functions() as function() as function(*)*?
+declare %private function tfm:functions() as function() as function(*)*?
 {
   (
     function-lookup(fn:QName("http://marklogic.com/xdmp","xdmp:functions"),0)
   )[1]
 };
 
-declare function tfm:annotation() as function(function(*),xs:QName) as item()*?
+declare %private function tfm:annotation() as function(function(*),xs:QName) as item()*?
 {
   (
-    function-lookup(fn:QName("http://marklogic.com/xdmp","xdmp:annotation"),0)
+    function-lookup(fn:QName("http://marklogic.com/xdmp","xdmp:annotation"),2)
   )[1]
 };
 
-declare function tfm:add-rule($map,$rule)
+declare %private function tfm:add-rule($map,$rule)
 {
   typeswitch($rule("predicate"))
     case function(element()) as xs:boolean
@@ -114,12 +152,12 @@ declare function tfm:add-rule($map,$rule)
       "The predicate should be a function")
 };
 
-declare function tfm:add($map,$key,$rule)
+declare %private function tfm:add($map,$key,$rule)
 {
   map:put($map,$key,($rule,map:get($map,$key)))
 };
 
-declare function tfm:run-mode(
+declare %private function tfm:run-mode(
   $map as function() as item()+,
   $nodes as node()*
 ) as item()*
@@ -128,7 +166,7 @@ declare function tfm:run-mode(
   else tfm:_run-mode($map,$nodes)
 };
 
-declare function tfm:_run-mode(
+declare %private function tfm:_run-mode(
   $map as function() as item()+,
   $nodes as node()*
 ) as item()*
@@ -147,17 +185,15 @@ declare function tfm:_run-mode(
   let $r :=
     fold-left(function($found, $r) {
         if(exists($found)) then $found
-        else if(try { $r("predicate")($n) } catch($e) { false() }) then $r (: TBD 3.0 try/catch :)
+        else if(try { $r("predicate")($n) } catch * { false() }) then $r
         else ()
       }, (), $rules)
   return
     if(exists($r)) then $r("action")($m,$n)
     else (: default rule :)
       typeswitch($n)
-        case document-node() return $n/node() ! $m(.) (: TBD multi-way typeswitch :)
-        case element() return $n/node() ! $m(.)
-        case text() return text { $n }
-        case attribute() return text { $n }
+        case element() | document-node() return $n/node() ! $m(.)
+        case attribute() | text() return text { $n }
         default return ()
 };
 

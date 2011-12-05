@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta http-equiv="Generator" content="xquerydoc - https://github.com/xquery/xquerydoc"/><meta http-equiv="Authors" content="Copyright 2011 - John Snelson, James Fuller"/><title>xqDoc - </title><style type="text/css">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta http-equiv="Generator" content="xquerydoc - https://github.com/xquery/xquerydoc"/><title>xqDoc - </title><style type="text/css">
           body {
           font-family: Helvetica;
           padding: 0.5em  1em;
@@ -61,26 +61,26 @@
           width:50%;
           vertical-align:text-top;
           }
-        </style><script src="lib/prettify.js" type="text/javascript"> </script><script src="lib/lang-xq.js" type="text/javascript"> </script><link rel="stylesheet" type="text/css" href="lib/prettify.css"/></head><body class="home"><div style="text-align:right;"><a href="index.html">XQuery API index</a></div><div id="main"><h1><span class="namespace">http://snelson.org.uk/functions/transform</span>  library module </h1><p>transform.xq - An extensible transformation library for XQuery 3.0</p><div><h3>Variables</h3><h4><pre class="prettyprint lang-xq"><u>Variable:</u> $magic as  element()</pre></h4><p>Magic value to get a mode function to return its map of rules</p></div><div><h3>Functions</h3><h4><pre class="prettyprint lang-xq"><u>Function:</u> mode(
-  $rules as (function(xs:string) as function(*)?)*) as  function(node()*) as item()*</pre></h4><p>Returns the mode function, that performs the transformation</p><h5>Params</h5><ul><li>rules as  (function(xs:string) as function(*)?)*</li></ul><h5>Returns</h5><ul><li> function(node()*) as item()*</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> extend-mode(
+        </style><script src="lib/prettify.js" type="text/javascript"> </script><script src="lib/lang-xq.js" type="text/javascript"> </script><link rel="stylesheet" type="text/css" href="lib/prettify.css"/></head><body class="home"><div style="text-align:right;"><a href="index.html">XQuery API index</a></div><div id="main"><h1><span class="namespace">http://snelson.org.uk/functions/transform</span>  library module </h1><p><h1>transform.xq</h1><p>An extensible transformation library for XQuery 3.0.</p></p><p>Author:  John Snelson  </p><p>Version:  0.9 </p><div id="variables"><h3>Variables</h3><div id="var_magic"><h4><pre class="prettyprint lang-xq"><u>Variable</u>: $magic as  element()</pre></h4><p> Magic value to get a mode function to return its map of rules </p></div></div><div id="functions"><h3>Functions</h3><div id="func_mode_1"><h4><pre class="prettyprint lang-xq"><u>Function</u>: mode(
+  $rules as (function(xs:string) as function(*)?)*) as  function(node()*) as item()*</pre></h4><p>  Returns a mode function, which can be called to perform the transformation  specified by the rules passed in as arguments. Call tfm:rule(), or  tfm:predicate-rule() to create rules to pass into this function.   </p>
+    See also:
+    <a href="#func_rule_2">rule#2</a>, <a href="#func_rule_3">rule#3</a>, <a href="#func_predicate-rule_2">predicate-rule#2</a><h5>Params</h5><ul><li>rules as  (function(xs:string) as function(*)?)*: The sequence of rules to use to create the mode, in increasing precedence.</li></ul><h5>Returns</h5><ul><li> function(node()*) as item()*: A mode function.</li></ul></div><div id="func_extend-mode_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: extend-mode(
   $mode as function(node()*) as item()*,
-  $rules as (function(xs:string) as function(*)?)*) as  function(node()*) as item()*</pre></h4><h5>Params</h5><ul><li>mode as  function(node()*) as item()*</li><li>rules as  (function(xs:string) as function(*)?)*</li></ul><h5>Returns</h5><ul><li> function(node()*) as item()*</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> named-mode(
-  $name as xs:string) as  function(node()*) as item()*</pre></h4><p>Returns a mode function constructed from the functions at runtime annotated with the given name</p><h5>Params</h5><ul><li>name as  xs:string</li></ul><h5>Returns</h5><ul><li> function(node()*) as item()*</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> functions() as  function() as function(*)*?</pre></h4><h5>Returns</h5><ul><li> function() as function(*)*?</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> annotation() as  function(function(*),xs:QName) as item()*?</pre></h4><h5>Returns</h5><ul><li> function(function(*),xs:QName) as item()*?</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> add-rule($map,$rule)</pre></h4><h5>Params</h5><ul><li>map as </li><li>rule as </li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> add($map,$key,$rule)</pre></h4><h5>Params</h5><ul><li>map as </li><li>key as </li><li>rule as </li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> run-mode(
-  $map as function() as item()+,
-  $nodes as node()*) as  item()*</pre></h4><h5>Params</h5><ul><li>map as  function() as item()+</li><li>nodes as  node()*</li></ul><h5>Returns</h5><ul><li> item()*</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> _run-mode(
-  $map as function() as item()+,
-  $nodes as node()*) as  item()*</pre></h4><h5>Params</h5><ul><li>map as  function() as item()+</li><li>nodes as  node()*</li></ul><h5>Returns</h5><ul><li> item()*</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> rule(
+  $rules as (function(xs:string) as function(*)?)*) as  function(node()*) as item()*</pre></h4><p>  Returns a new mode function, which extends the transformation from the  mode argument, adding the additional rules in higher precedence.  Call tfm:rule(), or tfm:predicate-rule() to create rules to pass into  this function.   </p>
+    See also:
+    <a href="#func_rule_2">rule#2</a>, <a href="#func_rule_3">rule#3</a>, <a href="#func_predicate-rule_2">predicate-rule#2</a><h5>Params</h5><ul><li>mode as  function(node()*) as item()*: The mode to extend.</li><li>rules as  (function(xs:string) as function(*)?)*: The sequence of rules to use to create the mode, in increasing precedence.</li></ul><h5>Returns</h5><ul><li> function(node()*) as item()*: A mode function.</li></ul></div><div id="func_named-mode_1"><h4><pre class="prettyprint lang-xq"><u>Function</u>: named-mode(
+  $name as xs:string) as  function(node()*) as item()*</pre></h4><p>  Returns a mode function constructed from the functions  annotated with the given name, using the %tfm:mode() annotation.   </p> If reflection capabilites are not supported by your XQuery  implementation. <h5>Params</h5><ul><li>name as  xs:string: The name used in the %tfm:mode() annotation in the functions for the mode to construct.</li></ul><h5>Returns</h5><ul><li> function(node()*) as item()*: A mode function.</li></ul></div><div id="func_rule_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: rule(
   $pattern as xs:string,
-  $action as function(function(node()*) as item()*,node()) as item()*) as  function(xs:string) as function(*)?</pre></h4><h5>Params</h5><ul><li>pattern as  xs:string</li><li>action as  function(function(node()*) as item()*,node()) as item()*</li></ul><h5>Returns</h5><ul><li> function(xs:string) as function(*)?</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> rule(
+  $action as function(function(node()*) as item()*,node()) as item()*) as  function(xs:string) as function(*)?</pre></h4><h5>Params</h5><ul><li>pattern as  xs:string</li><li>action as  function(function(node()*) as item()*,node()) as item()*</li></ul><h5>Returns</h5><ul><li> function(xs:string) as function(*)?</li></ul></div><div id="func_rule_3"><h4><pre class="prettyprint lang-xq"><u>Function</u>: rule(
   $pattern as xs:string,
   $action as function(function(node()*) as item()*,node()) as item()*,
-  $resolver as item()) as  function(xs:string) as function(*)?</pre></h4><h5>Params</h5><ul><li>pattern as  xs:string</li><li>action as  function(function(node()*) as item()*,node()) as item()*</li><li>resolver as  item()</li></ul><h5>Returns</h5><ul><li> function(xs:string) as function(*)?</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> predicate-rule(
+  $resolver as item()) as  function(xs:string) as function(*)?</pre></h4><h5>Params</h5><ul><li>pattern as  xs:string</li><li>action as  function(function(node()*) as item()*,node()) as item()*</li><li>resolver as  item()</li></ul><h5>Returns</h5><ul><li> function(xs:string) as function(*)?</li></ul></div><div id="func_predicate-rule_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: predicate-rule(
   $predicate as function(*),
-  $action as function(function(node()*) as item()*,node()) as item()*) as  function(xs:string) as function(*)?</pre></h4><p>Returns the predicate and action wrapped as a single item</p><h5>Params</h5><ul><li>predicate as  function(*)</li><li>action as  function(function(node()*) as item()*,node()) as item()*</li></ul><h5>Returns</h5><ul><li> function(xs:string) as function(*)?</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> resolver(
-  $element as element()) as  function(xs:string) as xs:QName</pre></h4><h5>Params</h5><ul><li>element as  element()</li></ul><h5>Returns</h5><ul><li> function(xs:string) as xs:QName</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> pattern(
-  $pattern as xs:string) as  function(*)</pre></h4><h5>Params</h5><ul><li>pattern as  xs:string</li></ul><h5>Returns</h5><ul><li> function(*)</li></ul><h4><pre class="prettyprint lang-xq"><u>Function:</u> pattern(
+  $action as function(function(node()*) as item()*,node()) as item()*) as  function(xs:string) as function(*)?</pre></h4><p> Returns the predicate and action wrapped as a single item </p><h5>Params</h5><ul><li>predicate as  function(*)</li><li>action as  function(function(node()*) as item()*,node()) as item()*</li></ul><h5>Returns</h5><ul><li> function(xs:string) as function(*)?</li></ul></div><div id="func_resolver_1"><h4><pre class="prettyprint lang-xq"><u>Function</u>: resolver(
+  $element as element()) as  function(xs:string) as xs:QName</pre></h4><h5>Params</h5><ul><li>element as  element()</li></ul><h5>Returns</h5><ul><li> function(xs:string) as xs:QName</li></ul></div><div id="func_pattern_1"><h4><pre class="prettyprint lang-xq"><u>Function</u>: pattern(
+  $pattern as xs:string) as  function(*)</pre></h4><h5>Params</h5><ul><li>pattern as  xs:string</li></ul><h5>Returns</h5><ul><li> function(*)</li></ul></div><div id="func_pattern_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: pattern(
   $pattern as xs:string,
-  $resolver as item()) as  function(*)</pre></h4><h5>Params</h5><ul><li>pattern as  xs:string</li><li>resolver as  item()</li></ul><h5>Returns</h5><ul><li> function(*)</li></ul></div><div><h3>Original Source Code</h3><pre class="prettyprint lang-xq">xquery version "3.0-ml";
+  $resolver as item()) as  function(*)</pre></h4><h5>Params</h5><ul><li>pattern as  xs:string</li><li>resolver as  item()</li></ul><h5>Returns</h5><ul><li> function(*)</li></ul></div></div><div><h3>Original Source Code</h3><pre class="prettyprint lang-xq">xquery version "3.0-ml";
 
 (:
  : Copyright (c) 2011 John Snelson
@@ -98,7 +98,13 @@
  : limitations under the License.
  :)
 
-(:~ transform.xq - An extensible transformation library for XQuery 3.0 :)
+(:~
+ : &lt;h1&gt;transform.xq&lt;/h1&gt;
+ : &lt;p&gt;An extensible transformation library for XQuery 3.0.&lt;/p&gt;
+ :
+ : @author John Snelson
+ : @version 0.9
+ :)
 module namespace tfm = "http://snelson.org.uk/functions/transform";
 
 import module namespace pat = "http://snelson.org.uk/functions/patterns" at "lib/compile_pattern.xq";
@@ -109,7 +115,17 @@ declare default function namespace "http://www.w3.org/2005/xpath-functions";
 (:~ Magic value to get a mode function to return its map of rules :)
 declare variable $tfm:magic as element() := &lt;magic/&gt;;
 
-(:~ Returns the mode function, that performs the transformation :)
+(:~
+ : Returns a mode function, which can be called to perform the transformation
+ : specified by the rules passed in as arguments. Call tfm:rule(), or
+ : tfm:predicate-rule() to create rules to pass into this function.
+ :
+ : @param rules: The sequence of rules to use to create the mode, in
+ : increasing precedence.
+ : @return A mode function.
+ :
+ : @see rule#2, rule#3, predicate-rule#2
+ :)
 declare function tfm:mode(
   $rules as (function(xs:string) as function(*)?)*
 ) as function(node()*) as item()*
@@ -118,6 +134,19 @@ declare function tfm:mode(
   return tfm:run-mode($map,?)
 };
 
+(:~
+ : Returns a new mode function, which extends the transformation from the
+ : mode argument, adding the additional rules in higher precedence.
+ : Call tfm:rule(), or tfm:predicate-rule() to create rules to pass into
+ : this function.
+ :
+ : @param mode: The mode to extend.
+ : @param rules: The sequence of rules to use to create the mode, in
+ : increasing precedence.
+ : @return A mode function.
+ :
+ : @see rule#2, rule#3, predicate-rule#2
+ :)
 declare function tfm:extend-mode(
   $mode as function(node()*) as item()*,
   $rules as (function(xs:string) as function(*)?)*
@@ -128,8 +157,17 @@ declare function tfm:extend-mode(
   return tfm:run-mode($map,?)
 };
 
-(:~ Returns a mode function constructed from the functions
-at runtime annotated with the given name :)
+(:~
+ : Returns a mode function constructed from the functions
+ : annotated with the given name, using the %tfm:mode() annotation.
+ :
+ : @param name: The name used in the %tfm:mode() annotation in the
+ : functions for the mode to construct.
+ : @return A mode function.
+ :
+ : @error If reflection capabilites are not supported by your XQuery
+ : implementation.
+ :)
 declare function tfm:named-mode(
   $name as xs:string
 ) as function(node()*) as item()*
@@ -151,21 +189,21 @@ declare function tfm:named-mode(
     )
 };
 
-declare function tfm:functions() as function() as function(*)*?
+declare private function tfm:functions() as function() as function(*)*?
 {
   (
     function-lookup(fn:QName("http://marklogic.com/xdmp","xdmp:functions"),0)
   )[1]
 };
 
-declare function tfm:annotation() as function(function(*),xs:QName) as item()*?
+declare private function tfm:annotation() as function(function(*),xs:QName) as item()*?
 {
   (
     function-lookup(fn:QName("http://marklogic.com/xdmp","xdmp:annotation"),0)
   )[1]
 };
 
-declare function tfm:add-rule($map,$rule)
+declare private function tfm:add-rule($map,$rule)
 {
   typeswitch($rule("predicate"))
     case function(element()) as xs:boolean
@@ -196,12 +234,12 @@ declare function tfm:add-rule($map,$rule)
       "The predicate should be a function")
 };
 
-declare function tfm:add($map,$key,$rule)
+declare private function tfm:add($map,$key,$rule)
 {
   map:put($map,$key,($rule,map:get($map,$key)))
 };
 
-declare function tfm:run-mode(
+declare private function tfm:run-mode(
   $map as function() as item()+,
   $nodes as node()*
 ) as item()*
@@ -210,7 +248,7 @@ declare function tfm:run-mode(
   else tfm:_run-mode($map,$nodes)
 };
 
-declare function tfm:_run-mode(
+declare private function tfm:_run-mode(
   $map as function() as item()+,
   $nodes as node()*
 ) as item()*

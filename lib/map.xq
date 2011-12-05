@@ -26,17 +26,17 @@ declare function entry($key as item(), $value as item()*)
   function() as item()+ { $key, $value }
 };
 
-declare function key($pair as function() as item()+) as item()
+declare %private function key($pair as function() as item()+) as item()
 {
   fn:head($pair())
 };
 
-declare function value($pair as function() as item()+) as item()*
+declare %private function value($pair as function() as item()+) as item()*
 {
   fn:tail($pair())
 };
 
-declare function lt($a as item(), $b as item()) as xs:boolean
+declare %private function lt($a as item(), $b as item()) as xs:boolean
 {
   key($a) lt key($b)
 };

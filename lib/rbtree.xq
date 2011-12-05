@@ -24,7 +24,7 @@ declare function create() as function() as item()*
   function() as empty-sequence() { () }
 };
 
-declare function create(
+declare %private function create(
   $x as item(),
   $a as function() as item()*,
   $b as function() as item()*,
@@ -39,22 +39,22 @@ declare function empty($tree as function() as item()*) as xs:boolean
   fn:empty($tree())
 };
 
-declare function value($tree as function() as item()*) as item()
+declare %private function value($tree as function() as item()*) as item()
 {
   $tree()[1]
 };
 
-declare function left($tree as function() as item()*) as function() as item()*
+declare %private function left($tree as function() as item()*) as function() as item()*
 {
   $tree()[2]
 };
 
-declare function right($tree as function() as item()*) as function() as item()*
+declare %private function right($tree as function() as item()*) as function() as item()*
 {
   $tree()[3]
 };
 
-declare function isred($tree as function() as item()*) as xs:boolean
+declare %private function isred($tree as function() as item()*) as xs:boolean
 {
   $tree()[4]
 };
@@ -122,7 +122,7 @@ declare function insert(
   create(value($rb), left($rb), right($rb), fn:false())
 };
 
-declare function insert_helper(
+declare %private function insert_helper(
   $lessthan as function(item(), item()) as xs:boolean,
   $tree as function() as item()*,
   $x as item()
@@ -181,7 +181,7 @@ declare function insert_helper(
   else create($x, $a, $b, $isred)
 };
 
-declare function balance(
+declare %private function balance(
   $x as item(),
   $y as item(),
   $z as item(),
