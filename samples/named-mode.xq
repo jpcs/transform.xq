@@ -58,17 +58,16 @@ function local:default6($mode, $node)
 };
 
 let $mode := tfm:named-mode("default")
-return $mode
-(: ( :)
-(:   <article> :)
-(:     <title>Lala</title> :)
-(:     <section id="one" fred="hello"> :)
-(:       <title>One</title> :)
-(:       <para>Once upon a <link ref="two">time</link></para> :)
-(:     </section> :)
-(:     <section id="two"> :)
-(:       <title>Two</title> :)
-(:       <para>There lived...</para> :)
-(:     </section> :)
-(:   </article> :)
-(: ) :)
+return $mode(
+  <article>
+    <title>Lala</title>
+    <section id="one" fred="hello">
+      <title>One</title>
+      <para>Once upon a <link ref="two">time</link></para>
+    </section>
+    <section id="two">
+      <title>Two</title>
+      <para>There lived...</para>
+    </section>
+  </article>
+)

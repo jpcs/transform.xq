@@ -189,6 +189,7 @@ declare %private function tfm:_run-mode(
         else ()
       }, (), $rules)
   return
+    (: TBD template parameters - jpcs :)
     if(exists($r)) then $r("action")($m,$n)
     else (: default rule :)
       typeswitch($n)
@@ -222,15 +223,10 @@ declare function tfm:predicate-rule(
 {
   function($k as xs:string) as function(*)?
   {
-    (: TBD switch :)
-    (: switch($k) :)
-    (: case "predicate" return $predicate :)
-    (: case "action" return $action :)
-    (: default return () :)
-
-    if($k eq "predicate") then $predicate
-    else if($k eq "action") then $action
-    else ()
+    switch($k)
+    case "predicate" return $predicate
+    case "action" return $action
+    default return ()
   }
 };
 

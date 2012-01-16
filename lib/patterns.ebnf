@@ -9,13 +9,10 @@ RelativePathPattern ::= PatternStep (('/' | DescendantPattern) PatternStep)*
 
 DescendantPattern ::= '//'
 
-PatternStep ::= (ChildAxis | AttributeAxis)? NodeTest /* PredicateList */
+PatternStep ::= (ChildAxis | AttributeAxis)? NodeTest
 
 ChildAxis ::= 'child' '::'
 AttributeAxis ::= 'attribute' '::' | '@'
-
-/* PredicateList ::= Predicate* */
-/* Predicate ::= '[' Expr ']' */
 
 
 
@@ -48,162 +45,6 @@ AnyKindTest ::= 'node' '(' ')'
 TextTest ::= 'text' '(' ')'
 CommentTest ::= 'comment' '(' ')'
 PITest ::= 'processing-instruction' '(' ( NCName | StringLiteral )? ')'
-
-/* DocumentTest */
-/*          ::= 'document-node' '(' ( ElementTest | SchemaElementTest )? ')' */
-/* AttributeTest */
-/*          ::= 'attribute' '(' ( AttribNameOrWildcard ( ',' TypeName )? )? ')' */
-/* AttribNameOrWildcard */
-/*          ::= AttributeName */
-/*            | Star */
-/* SchemaAttributeTest */
-/*          ::= 'schema-attribute' '(' AttributeDeclaration ')' */
-/* AttributeDeclaration */
-/*          ::= AttributeName */
-/* ElementTest */
-/*          ::= 'element' '(' ( ElementNameOrWildcard ( ',' TypeName '?'? )? )? ')' */
-/* ElementNameOrWildcard */
-/*          ::= ElementName */
-/*            | Star */
-/* SchemaElementTest */
-/*          ::= 'schema-element' '(' ElementDeclaration ')' */
-/* ElementDeclaration */
-/*          ::= ElementName */
-/* AttributeName */
-/*          ::= QName */
-/* ElementName */
-/*          ::= QName */
-/* TypeName ::= QName */
-
-
-
-
-
-
-
-/* Expr     ::= ExprSingle ( ',' ExprSingle )* */
-/* ExprSingle */
-/*          ::= ForExpr */
-/*            | QuantifiedExpr */
-/*            | IfExpr */
-/*            | OrExpr */
-
-/* ForExpr ::= SimpleForClause "return" ExprSingle */
-/* SimpleForClause ::= "for" "$" VarName "in" ExprSingle ("," "$" VarName "in" ExprSingle)* */
-
-/* QuantifiedExpr */
-/*          ::= ( 'some' | 'every' ) '$' VarName TypeDeclaration? 'in' ExprSingle ( ',' '$' VarName TypeDeclaration? 'in' ExprSingle )* 'satisfies' ExprSingle */
-/* IfExpr   ::= 'if' '(' Expr ')' 'then' ExprSingle 'else' ExprSingle */
-/* OrExpr   ::= AndExpr ( 'or' AndExpr )* */
-/* AndExpr  ::= ComparisonExpr ( 'and' ComparisonExpr )* */
-/* ComparisonExpr */
-/*          ::= RangeExpr ( ( ValueComp | GeneralComp | NodeComp ) RangeExpr )? */
-/* RangeExpr */
-/*          ::= AdditiveExpr ( 'to' AdditiveExpr )? */
-/* AdditiveExpr */
-/*          ::= MultiplicativeExpr ( ( '+' | '-' ) MultiplicativeExpr )* */
-/* MultiplicativeExpr */
-/*          ::= UnionExpr ( ( '*' | 'div' | 'idiv' | 'mod' ) UnionExpr )* */
-/* UnionExpr */
-/*          ::= IntersectExceptExpr ( ( 'union' | '|' ) IntersectExceptExpr )* */
-/* IntersectExceptExpr */
-/*          ::= InstanceofExpr ( ( 'intersect' | 'except' ) InstanceofExpr )* */
-/* InstanceofExpr */
-/*          ::= TreatExpr ( 'instance' 'of' SequenceType )? */
-/* TreatExpr */
-/*          ::= CastableExpr ( 'treat' 'as' SequenceType )? */
-/* CastableExpr */
-/*          ::= CastExpr ( 'castable' 'as' SingleType )? */
-/* CastExpr ::= UnaryExpr ( 'cast' 'as' SingleType )? */
-/* UnaryExpr ::= ( '-' | '+' )* ValueExpr */
-/* ValueExpr ::= PathExpr */
-/* GeneralComp */
-/*          ::= '=' */
-/*            | '!=' */
-/*            | '<' */
-/*            | '<=' */
-/*            | '>' */
-/*            | '>=' */
-/* ValueComp */
-/*          ::= 'eq' */
-/*            | 'ne' */
-/*            | 'lt' */
-/*            | 'le' */
-/*            | 'gt' */
-/*            | 'ge' */
-/* NodeComp ::= 'is' */
-/*            | '<<' */
-/*            | '>>' */
-/* PathExpr ::= '/' ( RelativePathExpr / ) */
-/*            | '//' RelativePathExpr */
-/*            | RelativePathExpr */
-/* RelativePathExpr */
-/*          ::= StepExpr ( ( '/' | '//' ) StepExpr )* */
-/* StepExpr ::= FilterExpr */
-/*            | AxisStep */
-/* AxisStep ::= ( ReverseStep | ForwardStep ) PredicateList */
-/* ForwardStep */
-/*          ::= ForwardAxis NodeTest */
-/*            | AbbrevForwardStep */
-/* ForwardAxis */
-/*          ::= 'child' '::' */
-/*            | 'descendant' '::' */
-/*            | 'attribute' '::' */
-/*            | 'self' '::' */
-/*            | 'descendant-or-self' '::' */
-/*            | 'following-sibling' '::' */
-/*            | 'following' '::' */
-/* AbbrevForwardStep */
-/*          ::= '@'? NodeTest */
-/* ReverseStep */
-/*          ::= ReverseAxis NodeTest */
-/*            | AbbrevReverseStep */
-/* ReverseAxis */
-/*          ::= 'parent' '::' */
-/*            | 'ancestor' '::' */
-/*            | 'preceding-sibling' '::' */
-/*            | 'preceding' '::' */
-/*            | 'ancestor-or-self' '::' */
-/* AbbrevReverseStep */
-/*          ::= '..' */
-/* FilterExpr */
-/*          ::= PrimaryExpr PredicateList */
-/* PrimaryExpr */
-/*          ::= Literal */
-/*            | VarRef */
-/*            | ParenthesizedExpr */
-/*            | ContextItemExpr */
-/*            | FunctionCall */
-/* Literal  ::= NumericLiteral */
-/*            | StringLiteral */
-/* NumericLiteral */
-/*          ::= IntegerLiteral */
-/*            | DecimalLiteral */
-/*            | DoubleLiteral */
-/* VarRef   ::= '$' VarName */
-/* VarName  ::= QName */
-/* ParenthesizedExpr */
-/*          ::= '(' Expr? ')' */
-/* ContextItemExpr */
-/*          ::= '.' */
-/* FunctionCall */
-/*          ::= FunctionName '(' ( ExprSingle ( ',' ExprSingle )* )? ')' */
-/* SingleType */
-/*          ::= AtomicType '?'? */
-/* TypeDeclaration */
-/*          ::= 'as' SequenceType */
-/* SequenceType */
-/*          ::= 'empty-sequence' '(' ')' */
-/*            | ItemType OccurrenceIndicator? */
-/* OccurrenceIndicator */
-/*          ::= '?' */
-/*            | '*'^OccurrenceIndicator */
-/*            | '+'^OccurrenceIndicator */
-/* ItemType ::= KindTest */
-/*            | 'item' '(' ')' */
-/*            | AtomicType */
-/* AtomicType */
-/*          ::= QName */
 
 QName    ::= FunctionName
            | 'attribute'
@@ -319,15 +160,6 @@ Comment  ::= '(:' ( CommentContents | Comment )* ':)'
 
 <?TOKENS?>
 
-/* IntegerLiteral */
-/*          ::= Digits */
-/* DecimalLiteral */
-/*          ::= '.' Digits */
-/*            | Digits '.' [0-9]* */
-/*           /\* ws: explicit *\/ */
-/* DoubleLiteral */
-/*          ::= ( '.' Digits | Digits ( '.' [0-9]* )? ) [eE] [+#x2D]? Digits */
-/*           /\* ws: explicit *\/ */
 StringLiteral
          ::= '"' ( EscapeQuot | [^\"] )* '"'
            | "'" ( EscapeApos | [^\'] )* "'"
@@ -336,13 +168,6 @@ EscapeQuot
          ::= '""'
 EscapeApos
          ::= "''"
-/* Digits   ::= [0-9]+ */
-/* Char     ::= #x0009 */
-/*            | #x000A */
-/*            | #x000D */
-/*            | [#x0020-#xD7FF] */
-/*            | [#xE000-#xFFFD] */
-/*            | [#x10000-#x10FFFF] */
 S        ::= ( #x0020 | #x0009 | #x000D | #x000A )+
 NameChar ::= Letter
            | Digit
@@ -705,13 +530,6 @@ NCNameColonStar ::= NCName ':' '*'
 StarColonNCName ::= '*' ':' NCName
 Star ::= '*'
 EOF      ::= #x0000
-/* NonNCNameChar */
-/*          ::= $ */
-/*            | ( Char - NCNameChar ) */
-/* NonNCNameChar */
-/*           \\ IntegerLiteral DecimalLiteral DoubleLiteral QName^Token NCName^Token 'ancestor' 'ancestor-or-self' 'and' 'as' 'ascending' 'at' 'attribute' 'base-uri' 'boundary-space' 'by' 'case' 'cast' 'castable' 'child' 'collation' 'comment' 'construction' 'copy-namespaces' 'declare' 'default' 'descendant' 'descendant-or-self' 'descending' 'div' 'document' 'document-node' 'element' 'else' 'empty' 'empty-sequence' 'encoding' 'eq' 'every' 'except' 'external' 'following' 'following-sibling' 'for' 'function' 'ge' 'greatest' 'gt' 'idiv' 'if' 'import' 'in' 'inherit' 'instance' 'intersect' 'is' 'item' 'lax' 'le' 'least' 'let' 'lt' 'mod' 'module' 'namespace' 'ne' 'node' 'no-inherit' 'no-preserve' 'of' 'option' 'or' 'order' 'ordered' 'ordering' 'parent' 'preceding' 'preceding-sibling' 'preserve' 'processing-instruction' 'return' 'satisfies' 'schema' 'schema-attribute' 'schema-element' 'self' 'some' 'stable' 'strict' 'strip' 'text' 'then' 'to' 'treat' 'typeswitch' 'union' 'unordered' 'validate' 'variable' 'version' 'where' 'xquery' */
-/* '+'       << '+'^OccurrenceIndicator */
-/* '*'       << '*'^OccurrenceIndicator Wildcard */
 QName^Token
           << 'ancestor' 'ancestor-or-self' 'and' 'ascending' 'attribute' 'case' 'cast' 'castable' 'child' 'collation' 'comment' 'declare' 'default' 'descendant' 'descendant-or-self' 'descending' 'div' 'document' 'document-node' 'element' 'else' 'empty' 'empty-sequence' 'eq' 'every' 'except' 'following' 'following-sibling' 'for' 'ge' 'gt' 'idiv' 'if' 'import' 'instance' 'intersect' 'is' 'item' 'le' 'let' 'lt' 'mod' 'module' 'ne' 'node' 'or' 'order' 'ordered' 'parent' 'preceding' 'preceding-sibling' 'processing-instruction' 'return' 'satisfies' 'schema-attribute' 'schema-element' 'self' 'some' 'stable' 'text' 'to' 'treat' 'typeswitch' 'union' 'unordered' 'validate' 'where' 'xquery'
 NCName^Token
