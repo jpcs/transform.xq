@@ -30,8 +30,8 @@ import module namespace map = "http://snelson.org.uk/functions/map" at "lib/map.
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
-(:~ Magic value to get a mode function to return its map of rules :)
-declare variable $tfm:magic as element() := <magic/>;
+(: Magic value to get a mode function to return its map of rules :)
+declare %private variable $tfm:magic as element() := <magic/>;
 
 (:~
  : Returns a mode function, which can be called to perform the transformation
@@ -79,7 +79,7 @@ declare function tfm:extend-mode(
  : Returns a mode function constructed from the functions
  : annotated with the given name, using the %tfm:mode() annotation.
  :
- : @param name: The name used in the %tfm:mode() annotation in the
+ : @param name: The name(s) used in the %tfm:mode() annotation in the
  : functions for the mode to construct.
  : @return A mode function.
  :
@@ -87,29 +87,71 @@ declare function tfm:extend-mode(
  : implementation.
  :)
 declare function tfm:named-mode(
-  $name as xs:string
+  $name as xs:string*
 ) as function(node()*) as item()*
+{
+  tfm:mode(tfm:named-rules($name))
+};
+
+(:~
+ : Returns a new mode function, which extends the transformation from the
+ : mode argument, adding additional rules constructed from the functions
+ : annotated with the given name, using the %tfm:mode() annotation.
+ :
+ : @param mode: The mode to extend.
+ : @param name: The name(s) used in the %tfm:mode() annotation in the
+ : functions for the mode to construct.
+ : @return A mode function.
+ :
+ : @error If reflection capabilites are not supported by your XQuery
+ : implementation.
+ :)
+declare function tfm:named-extend-mode(
+  $mode as function(node()*) as item()*,
+  $name as xs:string*
+) as function(node()*) as item()*
+{
+  tfm:extend-mode($mode, tfm:named-rules($name))
+};
+
+(:~
+ : Returns a sequence of rules constructed from the functions
+ : annotated with the given name(s), using the %tfm:mode() annotation.
+ :
+ : @param name: The name(s) used in the %tfm:mode() annotation in the
+ : functions for the mode to construct.
+ : @return A sequence of rules wrapped as functions, in
+ : increasing order by their %tfm:priority annotation.
+ :
+ : @error If reflection capabilites are not supported by your XQuery
+ : implementation.
+ :)
+declare function tfm:named-rules(
+  $name as xs:string*
+) as (function(xs:string) as function(*)?)*
 {
   let $functions := tfm:functions()
   let $annotation := tfm:annotation()
   return
     if(empty($functions) or empty($annotation)) then
       error(xs:QName("tfm:NOTSUPPORTED"), "Named modes are not supported on your platform")
-    else tfm:mode(
+    else
       for $f in $functions()
       where $annotation($f, xs:QName("tfm:mode")) = $name
+      order by number($annotation($f, xs:QName("tfm:priority"))) ascending empty least
       return
         let $predicate := $annotation($f, xs:QName("tfm:pattern"))
         return
           if(empty($predicate)) then error(xs:QName("tfm:NOPATTERN"),
             "No pattern specified on function: " || function-name($f) || "#" || function-arity($f))
           else tfm:rule($predicate, $f)
-    )
 };
 
 declare %private function tfm:functions() as function() as function(*)*?
 {
   (
+    (: Add fn:function-lookup() calls for platform specific versions of the function
+       to fetch all available functions. :)
     function-lookup(fn:QName("http://marklogic.com/xdmp","xdmp:functions"),0)
   )[1]
 };
@@ -117,6 +159,8 @@ declare %private function tfm:functions() as function() as function(*)*?
 declare %private function tfm:annotation() as function(function(*),xs:QName) as item()*?
 {
   (
+    (: Add fn:function-lookup() calls for platform specific versions of the function
+       to retrieve an annotation value from a function item. :)
     function-lookup(fn:QName("http://marklogic.com/xdmp","xdmp:annotation"),2)
   )[1]
 };
