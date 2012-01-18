@@ -31,7 +31,9 @@ declare function pat:compile-pattern(
   let $parse := p:parse-Pattern($pattern)
   let $preds := $parse/PathPattern ! pat:compile-path(*,$resolver)
   return
-    typeswitch($preds)
+    if(some $f in $preds satisfies $f instance of function(node()) as xs:boolean) then
+      pat:node-type(pat:or($preds))
+    else typeswitch($preds)
       case empty-sequence() return error(xs:QName("tfm:BADPATTERN"),
         "Invalid pattern: " || $parse)
 

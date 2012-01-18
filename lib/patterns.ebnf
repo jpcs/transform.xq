@@ -1,21 +1,14 @@
 Pattern ::= PathPattern ( '|' PathPattern )* EOF
 
 PathPattern ::= RootPattern | DescendantRootPattern | RelativePathPattern
-
 RootPattern ::= '/' RelativePathPattern?
 DescendantRootPattern ::= '//' RelativePathPattern
-
 RelativePathPattern ::= PatternStep (('/' | DescendantPattern) PatternStep)*
-
 DescendantPattern ::= '//'
 
 PatternStep ::= (ChildAxis | AttributeAxis)? NodeTest
-
 ChildAxis ::= 'child' '::'
 AttributeAxis ::= 'attribute' '::' | '@'
-
-
-
 
 NodeTest ::= KindTest
            | NameTest
@@ -23,7 +16,6 @@ NameTest ::= QName
            | NCNameColonStar
 	   | StarColonNCName
            | Star
-
 NCNameColonStar ::= NCNameColonStar^Token
 StarColonNCName ::= StarColonNCName^Token
 Star ::= Star^Token
@@ -35,8 +27,6 @@ KindTest ::= DocumentTest
            | CommentTest
            | TextTest
            | AnyKindTest
-           /* | SchemaElementTest */
-           /* | SchemaAttributeTest */
 
 DocumentTest ::= 'document-node' '(' ')'
 AttributeTest ::= 'attribute' '(' ( QName | Star )? ')'

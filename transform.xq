@@ -167,33 +167,27 @@ declare %private function tfm:annotation() as function(function(*),xs:QName) as 
 
 declare %private function tfm:add-rule($map,$rule)
 {
-  typeswitch($rule("predicate"))
-    case function(element()) as xs:boolean
-      return tfm:add($map,"element",$rule)
-    case function(attribute()) as xs:boolean
-      return tfm:add($map,"attribute",$rule)
-    case function(document-node()) as xs:boolean
-      return tfm:add($map,"document",$rule)
-    case function(comment()) as xs:boolean
-      return tfm:add($map,"comment",$rule)
-    case function(text()) as xs:boolean
-      return tfm:add($map,"text",$rule)
-    case function(processing-instruction()) as xs:boolean
-      return tfm:add($map,"pi",$rule)
-    case $p as function(*) return
-      if(function-arity($p) ne 1) then error(xs:QName("tfm:BADPREDICATE"),
-        "The predicate should have arity 1")
-      else (
-        tfm:add($map,"element",$rule),
-        tfm:add($map,"attribute",$rule),
-        tfm:add($map,"document",$rule),
-        tfm:add($map,"comment",$rule),
-        tfm:add($map,"text",$rule),
-        tfm:add($map,"pi",$rule),
-        tfm:add($map,"node",$rule)
-      )
-    default return error(xs:QName("tfm:BADPREDICATE"),
-      "The predicate should be a function")
+  let $predicate := $rule("predicate")
+  return
+    if(not($predicate instance of function(*))) then
+      error(xs:QName("tfm:BADPREDICATE"), "The predicate should be a function")
+    else if(function-arity($predicate) ne 1) then
+      error(xs:QName("tfm:BADPREDICATE"), "The predicate should have arity 1")
+    else
+      let $map := if($predicate instance of function(element()) as xs:boolean)
+        then tfm:add($map,"element",$rule) else $map
+      let $map := if($predicate instance of function(attribute()) as xs:boolean)
+        then tfm:add($map,"attribute",$rule) else $map
+      let $map := if($predicate instance of function(document-node()) as xs:boolean)
+        then tfm:add($map,"document",$rule) else $map
+      let $map := if($predicate instance of function(comment()) as xs:boolean)
+        then tfm:add($map,"comment",$rule) else $map
+      let $map := if($predicate instance of function(text()) as xs:boolean)
+        then tfm:add($map,"text",$rule) else $map
+      let $map := if($predicate instance of function(processing-instruction()) as xs:boolean)
+        then tfm:add($map,"pi",$rule) else $map
+      (: TBD namespace nodes - jpcs :)
+      return $map
 };
 
 declare %private function tfm:add($map,$key,$rule)
@@ -225,7 +219,8 @@ declare %private function tfm:_run-mode(
       case comment() return map:get($map,"comment")
       case text() return map:get($map,"text")
       case processing-instruction() return map:get($map,"pi")
-      default return map:get($map,"node")
+      default return error(xs:QName("tfm:NAMESPACENODE"),
+        "Transformation of namespace nodes not currently supported")
   let $r :=
     fold-left(function($found, $r) {
         if(exists($found)) then $found
@@ -244,7 +239,10 @@ declare %private function tfm:_run-mode(
 
 declare function tfm:rule(
   $pattern as xs:string,
-  $action as function(function(node()*) as item()*,node()) as item()*
+  $action as function(
+      function(node()*) as item()*,
+      node()
+    ) as item()*
 ) as function(xs:string) as function(*)?
 {
   tfm:predicate-rule(tfm:pattern($pattern), $action)
@@ -252,7 +250,10 @@ declare function tfm:rule(
 
 declare function tfm:rule(
   $pattern as xs:string,
-  $action as function(function(node()*) as item()*,node()) as item()*,
+  $action as function(
+      function(node()*) as item()*,
+      node()
+    ) as item()*,
   $resolver as item()
 ) as function(xs:string) as function(*)?
 {
@@ -262,15 +263,18 @@ declare function tfm:rule(
 (:~ Returns the predicate and action wrapped as a single item :)
 declare function tfm:predicate-rule(
   $predicate as function(*),
-  $action as function(function(node()*) as item()*,node()) as item()*
+  $action as function(
+      function(node()*) as item()*,
+      node()
+    ) as item()*
 ) as function(xs:string) as function(*)?
 {
   function($k as xs:string) as function(*)?
   {
     switch($k)
-    case "predicate" return $predicate
-    case "action" return $action
-    default return ()
+      case "predicate" return $predicate
+      case "action" return $action
+      default return ()
   }
 };
 
