@@ -77,9 +77,9 @@ declare function tfm:extend-mode(
 
 (:~
  : Returns a mode function constructed from the functions
- : annotated with the given name, using the %tfm:mode() annotation.
+ : annotated with the given name in the %tfm:rule() annotation.
  :
- : @param name: The name(s) used in the %tfm:mode() annotation in the
+ : @param name: The name(s) used in the %tfm:rule() annotation in the
  : functions for the mode to construct.
  : @return A mode function.
  :
@@ -96,10 +96,10 @@ declare function tfm:named-mode(
 (:~
  : Returns a new mode function, which extends the transformation from the
  : mode argument, adding additional rules constructed from the functions
- : annotated with the given name, using the %tfm:mode() annotation.
+ : annotated with the given name in the %tfm:rule() annotation.
  :
  : @param mode: The mode to extend.
- : @param name: The name(s) used in the %tfm:mode() annotation in the
+ : @param name: The name(s) used in the %tfm:rule() annotation in the
  : functions for the mode to construct.
  : @return A mode function.
  :
@@ -116,12 +116,12 @@ declare function tfm:named-extend-mode(
 
 (:~
  : Returns a sequence of rules constructed from the functions
- : annotated with the given name(s), using the %tfm:mode() annotation.
+ : annotated with the given name(s) in the %tfm:rule() annotation.
  :
- : @param name: The name(s) used in the %tfm:mode() annotation in the
+ : @param name: The name(s) used in the %tfm:rule() annotation in the
  : functions for the mode to construct.
  : @return A sequence of rules wrapped as functions, in
- : increasing order by their %tfm:priority annotation.
+ : increasing order by the priority from the %tfm:rule annotation.
  :
  : @error If reflection capabilites are not supported by your XQuery
  : implementation.
@@ -137,14 +137,13 @@ declare function tfm:named-rules(
       error(xs:QName("tfm:NOTSUPPORTED"), "Named modes are not supported on your platform")
     else
       for $f in $functions()
-      where $annotation($f, xs:QName("tfm:mode")) = $name
-      order by number($annotation($f, xs:QName("tfm:priority"))) ascending empty least
+      let $a := $annotation($f, xs:QName("tfm:rule"))
+      where $a[1] = $name
+      order by number($a[3]) ascending empty least
       return
-        let $predicate := $annotation($f, xs:QName("tfm:pattern"))
-        return
-          if(empty($predicate)) then error(xs:QName("tfm:NOPATTERN"),
-            "No pattern specified on function: " || function-name($f) || "#" || function-arity($f))
-          else tfm:rule($predicate, $f)
+        if(empty($a[2])) then error(xs:QName("tfm:NOPATTERN"),
+          "No pattern specified on function: " || function-name($f) || "#" || function-arity($f))
+        else tfm:rule($a[2], $f)
 };
 
 declare %private function tfm:functions() as function() as function(*)*?

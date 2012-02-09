@@ -18,37 +18,37 @@ xquery version "3.0";
 
 import module namespace tfm = "http://snelson.org.uk/functions/transform" at "../transform.xq";
 
-declare %tfm:mode("default") %tfm:pattern("@*")
+declare %tfm:rule("default","@*")
 function local:default1($mode, $node)
 {
   ()
 };
 
-declare %tfm:mode("default") %tfm:pattern("para")
+declare %tfm:rule("default","para")
 function local:default2($mode, $node)
 {
   <p xmlns="http://www.w3.org/1999/xhtml">{ $mode($node/(@*|node())) }</p>
 };
 
-declare %tfm:mode("default") %tfm:pattern("article/title") %tfm:priority(10)
+declare %tfm:rule("default","article/title",10)
 function local:default3($mode, $node)
 {
   <h1 xmlns="http://www.w3.org/1999/xhtml">{ $mode($node/(@*|node())) }</h1>
 };
 
-declare %tfm:mode("default") %tfm:pattern("title")
+declare %tfm:rule("default","title")
 function local:default4($mode, $node)
 {
   <h2 xmlns="http://www.w3.org/1999/xhtml">{ $mode($node/(@*|node())) }</h2>
 };
 
-declare %tfm:mode("default") %tfm:pattern("section")
+declare %tfm:rule("default","section")
 function local:default5($mode, $node)
 {
    <div xmlns="http://www.w3.org/1999/xhtml">{ $mode($node/(@*|node())) }</div>
 };
 
-declare %tfm:mode("default") %tfm:pattern("article")
+declare %tfm:rule("default","article")
 function local:default6($mode, $node)
 {
   <html xmlns="http://www.w3.org/1999/xhtml">
