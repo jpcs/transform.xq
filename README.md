@@ -10,14 +10,6 @@ Author:  John Snelson
 
 Version:  0.9 
 
-## Variables
-
-### $magic
-    $magic as  element()
-
-
-
-
 ## Functions
 
 ### mode\#1
