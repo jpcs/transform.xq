@@ -29,11 +29,11 @@ Version:  0.9
 
 #### Params
 
-* rules as  (function(xs:string) as function(*)?)*: The sequence of rules to use to create the mode, in increasing precedence.
+* rules as  (function(xs:string) as function(\*)?)\*: The sequence of rules to use to create the mode, in increasing precedence.
 
 
 #### Returns
-*  function(node()*) as item()*: A mode function.
+*  function(node()\*) as item()\*: A mode function.
 
 ### extend-mode\#2
     extend-mode(
@@ -45,13 +45,13 @@ Version:  0.9
 
 #### Params
 
-* mode as  function(node()*) as item()*: The mode to extend.
+* mode as  function(node()\*) as item()\*: The mode to extend.
 
-* rules as  (function(xs:string) as function(*)?)*: The sequence of rules to use to create the mode, in increasing precedence.
+* rules as  (function(xs:string) as function(\*)?)\*: The sequence of rules to use to create the mode, in increasing precedence.
 
 
 #### Returns
-*  function(node()*) as item()*: A mode function.
+*  function(node()\*) as item()\*: A mode function.
 
 ### named-mode\#1
     named-mode(
@@ -62,11 +62,11 @@ Version:  0.9
  If reflection capabilites are not supported by your XQuery  implementation. 
 #### Params
 
-* name as  xs:string*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
+* name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
 
 
 #### Returns
-*  function(node()*) as item()*: A mode function.
+*  function(node()\*) as item()\*: A mode function.
 
 ### named-extend-mode\#2
     named-extend-mode(
@@ -78,13 +78,13 @@ Version:  0.9
  If reflection capabilites are not supported by your XQuery  implementation. 
 #### Params
 
-* mode as  function(node()*) as item()*: The mode to extend.
+* mode as  function(node()\*) as item()\*: The mode to extend.
 
-* name as  xs:string*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
+* name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
 
 
 #### Returns
-*  function(node()*) as item()*: A mode function.
+*  function(node()\*) as item()\*: A mode function.
 
 ### named-rules\#1
     named-rules(
@@ -95,11 +95,11 @@ Version:  0.9
  If reflection capabilites are not supported by your XQuery  implementation. 
 #### Params
 
-* name as  xs:string*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
+* name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
 
 
 #### Returns
-*  (function(xs:string) as function(*)?)*: A sequence of rules wrapped as functions, in increasing order by the priority from the %tfm:rule annotation.
+*  (function(xs:string) as function(\*)?)\*: A sequence of rules wrapped as functions, in increasing order by the priority from the %tfm:rule annotation.
 
 ### rule\#2
     rule(
@@ -115,13 +115,13 @@ Version:  0.9
 * pattern as  xs:string
 
 * action as  function(
-      function(node()*) as item()*,
+      function(node()\*) as item()\*,
       node()
-    ) as item()*
+    ) as item()\*
 
 
 #### Returns
-*  function(xs:string) as function(*)?
+*  function(xs:string) as function(\*)?
 
 ### rule\#3
     rule(
@@ -138,15 +138,15 @@ Version:  0.9
 * pattern as  xs:string
 
 * action as  function(
-      function(node()*) as item()*,
+      function(node()\*) as item()\*,
       node()
-    ) as item()*
+    ) as item()\*
 
 * resolver as  item()
 
 
 #### Returns
-*  function(xs:string) as function(*)?
+*  function(xs:string) as function(\*)?
 
 ### predicate-rule\#2
     predicate-rule(
@@ -161,16 +161,16 @@ Version:  0.9
 
 #### Params
 
-* predicate as  function(*)
+* predicate as  function(\*)
 
 * action as  function(
-      function(node()*) as item()*,
+      function(node()\*) as item()\*,
       node()
-    ) as item()*
+    ) as item()\*
 
 
 #### Returns
-*  function(xs:string) as function(*)?
+*  function(xs:string) as function(\*)?
 
 ### resolver\#1
     resolver(
@@ -196,7 +196,7 @@ Version:  0.9
 
 
 #### Returns
-*  function(*)
+*  function(\*)
 
 ### pattern\#2
     pattern(
@@ -212,7 +212,7 @@ Version:  0.9
 
 
 #### Returns
-*  function(*)
+*  function(\*)
 
 
 
