@@ -7,9 +7,7 @@ An extensible transformation library for XQuery 3.0.
 
 
 Author:  John Snelson  
-
 Version:  0.9 
-
 ## Functions
 
 ### mode\#1
@@ -104,7 +102,7 @@ Version:  0.9
   Returns a rule constructed from the pattern and action specified.  Rules are represented as a single function.   
 
 The arguments to the action function are:      
-* function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.    
+* function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
 * node(): The context node that the rule is executed on.  
    
 
@@ -131,21 +129,28 @@ The arguments to the action function are:
         ) as item()*,
       $resolver as item()) as  function(xs:string) as function(*)?
 
+  Returns a rule constructed from the pattern and action specified.  Rules are represented as a single function.   
+
+The arguments to the action function are:      
+* function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
+* node(): The context node that the rule is executed on.  
+   
+
 
 #### Params
 
-* pattern as  xs:string
+* pattern as  xs:string: The pattern string that the rule must match.
 
 * action as  function(
       function(node()\*) as item()\*,
       node()
-    ) as item()\*
+    ) as item()\*: The action function to be executed when the rule is matched.
 
-* resolver as  item()
+* resolver as  item(): Either an element from which to take the namespace bindings, or a function of type function(xs:string) as xs:QName.
 
 
 #### Returns
-*  function(xs:string) as function(\*)?
+*  function(xs:string) as function(\*)?: The rule wrapped as a function.
 
 ### predicate-rule\#2
     predicate-rule(
@@ -155,7 +160,15 @@ The arguments to the action function are:
           node()
         ) as item()*) as  function(xs:string) as function(*)?
 
- Returns the predicate and action wrapped as a single item 
+  Returns a rule constructed from the predicate function and action specified.  Rules are represented as a single function.   
+
+The predicate function takes a node as an argument and returns true if the node matches.  Returning false or raising an error is considered a non-match. Typing the argument of the function  provided with a SequenceType of element(), attribute(), etc. will result in the predicate function  being optimized by only attempting to be matched against that type of name.
+   
+
+The arguments to the action function are:      
+* function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
+* node(): The context node that the rule is executed on.  
+   
 
 
 #### Params
@@ -165,53 +178,59 @@ The arguments to the action function are:
 * action as  function(
       function(node()\*) as item()\*,
       node()
-    ) as item()\*
+    ) as item()\*: The action function to be executed when the rule is matched.
 
 
 #### Returns
-*  function(xs:string) as function(\*)?
+*  function(xs:string) as function(\*)?: The rule wrapped as a function.
 
 ### resolver\#1
     resolver(
       $element as element()) as  function(xs:string) as xs:QName
 
+  Returns a prefix resolver function that resolves prefixes by looking them up in the namespace  bindings of the element.   
+
 
 #### Params
 
-* element as  element()
+* element as  element(): The element whose namespace bindings should be used.
 
 
 #### Returns
-*  function(xs:string) as xs:QName
+*  function(xs:string) as xs:QName: The resolver function.
 
 ### pattern\#1
     pattern(
       $pattern as xs:string) as  function(*)
 
+  Compiles the pattern given in the string argument to a predicate function,  which takes a node as the argument, and returns true if the node matches  the pattern. If the predicate returns false or raises an error, the node  does not match the pattern.   
+
 
 #### Params
 
-* pattern as  xs:string
+* pattern as  xs:string: The pattern string.
 
 
 #### Returns
-*  function(\*)
+*  function(\*): The predicate function.
 
 ### pattern\#2
     pattern(
       $pattern as xs:string,
       $resolver as item()) as  function(*)
 
+  Compiles the pattern given in the string argument to a predicate function,  which takes a node as the argument, and returns true if the node matches  the pattern. If the predicate returns false or raises an error, the node  does not match the pattern.   
+
 
 #### Params
 
-* pattern as  xs:string
+* pattern as  xs:string: The pattern string.
 
-* resolver as  item()
+* resolver as  item(): Either an element from which to take the namespace bindings, or a function of type function(xs:string) as xs:QName which resolves a lexical QName to an xs:QName.
 
 
 #### Returns
-*  function(\*)
+*  function(\*): The predicate function.
 
 
 

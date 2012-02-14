@@ -30,7 +30,7 @@ import module namespace map = "http://snelson.org.uk/functions/map" at "lib/map.
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
-(: Magic value to get a mode function to return its map of rules :)
+(:~ Magic value to get a mode function to return its map of rules :)
 declare %private variable $tfm:magic as element() := <magic/>;
 
 (:~
@@ -38,7 +38,7 @@ declare %private variable $tfm:magic as element() := <magic/>;
  : specified by the rules passed in as arguments. Call tfm:rule(), or
  : tfm:predicate-rule() to create rules to pass into this function.
  :
- : @param rules: The sequence of rules to use to create the mode, in
+ : @param $rules: The sequence of rules to use to create the mode, in
  : increasing precedence.
  : @return A mode function.
  :
@@ -58,8 +58,8 @@ declare function tfm:mode(
  : Call tfm:rule(), or tfm:predicate-rule() to create rules to pass into
  : this function.
  :
- : @param mode: The mode to extend.
- : @param rules: The sequence of rules to use to create the mode, in
+ : @param $mode: The mode to extend.
+ : @param $rules: The sequence of rules to use to create the mode, in
  : increasing precedence.
  : @return A mode function.
  :
@@ -79,7 +79,7 @@ declare function tfm:extend-mode(
  : Returns a mode function constructed from the functions
  : annotated with the given name in the %tfm:rule() annotation.
  :
- : @param name: The name(s) used in the %tfm:rule() annotation in the
+ : @param $name: The name(s) used in the %tfm:rule() annotation in the
  : functions for the mode to construct.
  : @return A mode function.
  :
@@ -98,8 +98,8 @@ declare function tfm:named-mode(
  : mode argument, adding additional rules constructed from the functions
  : annotated with the given name in the %tfm:rule() annotation.
  :
- : @param mode: The mode to extend.
- : @param name: The name(s) used in the %tfm:rule() annotation in the
+ : @param $mode: The mode to extend.
+ : @param $name: The name(s) used in the %tfm:rule() annotation in the
  : functions for the mode to construct.
  : @return A mode function.
  :
@@ -118,7 +118,7 @@ declare function tfm:named-extend-mode(
  : Returns a sequence of rules constructed from the functions
  : annotated with the given name(s) in the %tfm:rule() annotation.
  :
- : @param name: The name(s) used in the %tfm:rule() annotation in the
+ : @param $name: The name(s) used in the %tfm:rule() annotation in the
  : functions for the mode to construct.
  : @return A sequence of rules wrapped as functions, in
  : increasing order by the priority from the %tfm:rule annotation.
@@ -236,6 +236,20 @@ declare %private function tfm:_run-mode(
         default return ()
 };
 
+(:~
+ : Returns a rule constructed from the pattern and action specified.
+ : Rules are represented as a single function.
+ :
+ : <p>The arguments to the action function are:
+ : <ul>
+ :   <li>function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.</li>
+ :   <li>node(): The context node that the rule is executed on.</li>
+ : </ul></p>
+ :
+ : @param $pattern: The pattern string that the rule must match.
+ : @param $action: The action function to be executed when the rule is matched.
+ : @return The rule wrapped as a function.
+ :)
 declare function tfm:rule(
   $pattern as xs:string,
   $action as function(
@@ -247,6 +261,22 @@ declare function tfm:rule(
   tfm:predicate-rule(tfm:pattern($pattern), $action)
 };
 
+(:~
+ : Returns a rule constructed from the pattern and action specified.
+ : Rules are represented as a single function.
+ :
+ : <p>The arguments to the action function are:
+ : <ul>
+ :   <li>function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.</li>
+ :   <li>node(): The context node that the rule is executed on.</li>
+ : </ul></p>
+ :
+ : @param $pattern: The pattern string that the rule must match.
+ : @param $action: The action function to be executed when the rule is matched.
+ : @param $resolver: Either an element from which to take the namespace bindings, or a function
+ : of type function(xs:string) as xs:QName.
+ : @return The rule wrapped as a function.
+ :)
 declare function tfm:rule(
   $pattern as xs:string,
   $action as function(
@@ -259,7 +289,27 @@ declare function tfm:rule(
   tfm:predicate-rule(tfm:pattern($pattern,$resolver), $action)
 };
 
-(:~ Returns the predicate and action wrapped as a single item :)
+(:~
+ : Returns a rule constructed from the predicate function and action specified.
+ : Rules are represented as a single function.
+ :
+ : <p>The predicate function takes a node as an argument and returns true if the node matches.
+ : Returning false or raising an error is considered a non-match. Typing the argument of the function
+ : provided with a SequenceType of element(), attribute(), etc. will result in the predicate function
+ : being optimized by only attempting to be matched against that type of name.</p>
+ :
+ : <p>The arguments to the action function are:
+ : <ul>
+ :   <li>function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.</li>
+ :   <li>node(): The context node that the rule is executed on.</li>
+ : </ul></p>
+ :
+ : @param $pattern: The pattern string that the rule must match.
+ : @param $action: The action function to be executed when the rule is matched.
+ : @param $resolver: Either an element from which to take the namespace bindings, or a function
+ : of type function(xs:string) as xs:QName which resolves a lexical QName to an xs:QName.
+ : @return The rule wrapped as a function.
+ :)
 declare function tfm:predicate-rule(
   $predicate as function(*),
   $action as function(
@@ -277,6 +327,13 @@ declare function tfm:predicate-rule(
   }
 };
 
+(:~
+ : Returns a prefix resolver function that resolves prefixes by looking them up in the namespace
+ : bindings of the element.
+ :
+ : @param $element: The element whose namespace bindings should be used.
+ : @return The resolver function.
+ :)
 declare function tfm:resolver(
   $element as element()
 ) as function(xs:string) as xs:QName
@@ -284,6 +341,15 @@ declare function tfm:resolver(
   resolve-QName(?, $element)
 };
 
+(:~
+ : Compiles the pattern given in the string argument to a predicate function,
+ : which takes a node as the argument, and returns true if the node matches
+ : the pattern. If the predicate returns false or raises an error, the node
+ : does not match the pattern.
+ :
+ : @param $pattern: The pattern string.
+ : @return The predicate function.
+ :)
 declare function tfm:pattern(
   $pattern as xs:string
 ) as function(*)
@@ -297,6 +363,17 @@ declare function tfm:pattern(
   return tfm:pattern($pattern,$ns)
 };
 
+(:~
+ : Compiles the pattern given in the string argument to a predicate function,
+ : which takes a node as the argument, and returns true if the node matches
+ : the pattern. If the predicate returns false or raises an error, the node
+ : does not match the pattern.
+ :
+ : @param $pattern: The pattern string.
+ : @param $resolver: Either an element from which to take the namespace bindings, or a function
+ : of type function(xs:string) as xs:QName which resolves a lexical QName to an xs:QName.
+ : @return The predicate function.
+ :)
 declare function tfm:pattern(
   $pattern as xs:string,
   $resolver as item()
