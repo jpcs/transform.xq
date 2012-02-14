@@ -101,19 +101,23 @@ Version:  0.9
           node()
         ) as item()*) as  function(xs:string) as function(*)?
 
+  Returns a rule constructed from the pattern and action specified.  Rules are represented as a single function.   The arguments to the action function are:      
+* function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.    
+* node(): The context node that the rule is executed on.     
+
 
 #### Params
 
-* pattern as  xs:string
+* pattern as  xs:string: The pattern string that the rule must match.
 
 * action as  function(
       function(node()\*) as item()\*,
       node()
-    ) as item()\*
+    ) as item()\*: The action function to be executed when the rule is matched.
 
 
 #### Returns
-*  function(xs:string) as function(\*)?
+*  function(xs:string) as function(\*)?: The rule wrapped as a function.
 
 ### rule\#3
     rule(
