@@ -63,6 +63,12 @@ function local:extend1($mode, $node)
   "__", $node, "__"
 };
 
+declare %tfm:rule("extend","article/title")
+function local:extend1($mode, $node, $next-match)
+{
+  <hr xmlns="http://www.w3.org/1999/xhtml"/>, $next-match()
+};
+
 declare %tfm:rule("extend","@id")
 function local:extend2($mode, $node)
 {
