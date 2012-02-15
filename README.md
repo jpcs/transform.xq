@@ -98,7 +98,8 @@ Version:  0.9
 
   Returns a rule constructed from the pattern and action specified.  Rules are represented as a single function.   
 
-Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:      
+Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:  
+    
 * $mode as function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
 * $context as node(): The context node that the rule is executed on.    
 * $next-match as function() as item()\*: The next-mode function.  
@@ -123,7 +124,8 @@ Action functions should take between 2 and 3 arguments. If the function takes  f
 
   Returns a rule constructed from the pattern and action specified.  Rules are represented as a single function.   
 
-Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:      
+Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:  
+    
 * function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
 * node(): The context node that the rule is executed on.    
 * $next-match as function() as item()\*: The next-mode function.  
@@ -152,7 +154,8 @@ Action functions should take between 2 and 3 arguments. If the function takes  f
 The predicate function takes a node as an argument and returns true if the node matches.  Returning false or raising an error is considered a non-match. Typing the argument of the function  provided with a SequenceType of element(), attribute(), etc. will result in the predicate function  being optimized by only attempting to be matched against that type of name.
    
 
-Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:      
+Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:  
+    
 * function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
 * node(): The context node that the rule is executed on.    
 * $next-match as function() as item()\*: The next-mode function.  
