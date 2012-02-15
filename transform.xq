@@ -208,10 +208,10 @@ declare %private function tfm:_run-mode(
   $nodes as node()*
 ) as item()*
 {
-  let $m := tfm:_run-mode($map,?)
-  for $n in $nodes
+  let $mode := tfm:_run-mode($map,?)
+  for $node in $nodes
   let $rules :=
-    typeswitch($n)
+    typeswitch($node)
       case element() return map:get($map,"element")
       case attribute() return map:get($map,"attribute")
       case document-node() return map:get($map,"document")
@@ -220,19 +220,32 @@ declare %private function tfm:_run-mode(
       case processing-instruction() return map:get($map,"pi")
       default return error(xs:QName("tfm:NAMESPACENODE"),
         "Transformation of namespace nodes not currently supported")
+  return
+    tfm:next-match($mode,$rules,$node)
+};
+
+declare %private function tfm:next-match(
+  $mode as function(node()*) as item()*,
+  $rules as (function(xs:string) as function(*)?)*,
+  $node as node()
+) as item()*
+{
   let $r :=
     fold-left(function($found, $r) {
-        if(exists($found)) then $found
-        else if(try { $r("predicate")($n) } catch * { false() }) then $r
+        if(exists($found)) then ($found,$r)
+        else if(try { $r("predicate")($node) } catch * { false() }) then $r
         else ()
       }, (), $rules)
+  let $matched-rule := head($r)
+  let $next-match := function() { tfm:next-match($mode,tail($r),$node) }
   return
     (: TBD template parameters - jpcs :)
-    if(exists($r)) then $r("action")($m,$n)
+    if(exists($matched-rule)) then
+      $matched-rule("action")($mode,$node,$next-match)
     else (: default rule :)
-      typeswitch($n)
-        case element() | document-node() return $n/node() ! $m(.)
-        case attribute() | text() return text { $n }
+      typeswitch($node)
+        case element() | document-node() return $node/node() ! $mode(.)
+        case attribute() | text() return text { $node }
         default return ()
 };
 
@@ -240,10 +253,12 @@ declare %private function tfm:_run-mode(
  : Returns a rule constructed from the pattern and action specified.
  : Rules are represented as a single function.
  :
- : <p>The arguments to the action function are:
+ : <p>Action functions should take between 2 and 3 arguments. If the function takes
+ : fewer arguments, they are the arguments at the start of this list:
  : <ul>
- :   <li>function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.</li>
- :   <li>node(): The context node that the rule is executed on.</li>
+ :   <li>$mode as function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.</li>
+ :   <li>$context as node(): The context node that the rule is executed on.</li>
+ :   <li>$next-match as function() as item()*: The next-mode function.</li>
  : </ul></p>
  :
  : @param $pattern: The pattern string that the rule must match.
@@ -252,10 +267,7 @@ declare %private function tfm:_run-mode(
  :)
 declare function tfm:rule(
   $pattern as xs:string,
-  $action as function(
-      function(node()*) as item()*,
-      node()
-    ) as item()*
+  $action as function(*)
 ) as function(xs:string) as function(*)?
 {
   tfm:predicate-rule(tfm:pattern($pattern), $action)
@@ -265,10 +277,12 @@ declare function tfm:rule(
  : Returns a rule constructed from the pattern and action specified.
  : Rules are represented as a single function.
  :
- : <p>The arguments to the action function are:
+ : <p>Action functions should take between 2 and 3 arguments. If the function takes
+ : fewer arguments, they are the arguments at the start of this list:
  : <ul>
  :   <li>function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.</li>
  :   <li>node(): The context node that the rule is executed on.</li>
+ :   <li>$next-match as function() as item()*: The next-mode function.</li>
  : </ul></p>
  :
  : @param $pattern: The pattern string that the rule must match.
@@ -279,10 +293,7 @@ declare function tfm:rule(
  :)
 declare function tfm:rule(
   $pattern as xs:string,
-  $action as function(
-      function(node()*) as item()*,
-      node()
-    ) as item()*,
+  $action as function(*),
   $resolver as item()
 ) as function(xs:string) as function(*)?
 {
@@ -298,10 +309,12 @@ declare function tfm:rule(
  : provided with a SequenceType of element(), attribute(), etc. will result in the predicate function
  : being optimized by only attempting to be matched against that type of name.</p>
  :
- : <p>The arguments to the action function are:
+ : <p>Action functions should take between 2 and 3 arguments. If the function takes
+ : fewer arguments, they are the arguments at the start of this list:
  : <ul>
  :   <li>function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.</li>
  :   <li>node(): The context node that the rule is executed on.</li>
+ :   <li>$next-match as function() as item()*: The next-mode function.</li>
  : </ul></p>
  :
  : @param $pattern: The pattern string that the rule must match.
@@ -312,19 +325,49 @@ declare function tfm:rule(
  :)
 declare function tfm:predicate-rule(
   $predicate as function(*),
-  $action as function(
-      function(node()*) as item()*,
-      node()
-    ) as item()*
+  $action as function(*)
 ) as function(xs:string) as function(*)?
 {
-  function($k as xs:string) as function(*)?
-  {
-    switch($k)
-      case "predicate" return $predicate
-      case "action" return $action
-      default return ()
-  }
+  let $action := tfm:check-action($action)
+  return
+    function($k as xs:string) as function(*)?
+    {
+      switch($k)
+        case "predicate" return $predicate
+        case "action" return $action
+        default return ()
+    }
+};
+
+declare %private function tfm:check-action(
+  $action as function(*)
+) as function(
+  function(node()*) as item()*,
+  node(),
+  function() as item()*
+) as item()*
+{
+  typeswitch($action)
+    case function(
+          function(node()*) as item()*,
+          node()
+        ) as item()*
+      return function(
+          $mode as function(node()*) as item()*,
+          $node as node(),
+          $next-match as function() as item()*
+        ) as item()*
+        {
+          $action($mode,$node)
+        }
+      case function(
+          function(node()*) as item()*,
+          node(),
+          function() as item()*
+        ) as item()*
+      return $action
+    default return error(xs:QName("tfm:BADACTION"),
+      "The action function has the wrong type")
 };
 
 (:~

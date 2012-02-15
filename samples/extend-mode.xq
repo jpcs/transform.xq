@@ -53,6 +53,10 @@ let $emode := tfm:extend-mode($mode,
   {
     "__", $node, "__"
   }),
+  tfm:rule("article/title", function($mode, $node, $next-match)
+  {
+    <hr xmlns="http://www.w3.org/1999/xhtml"/>, $next-match()
+  }),
   tfm:predicate-rule(function($node as text()) as xs:boolean
   {
     $node/parent::link and empty($node/following-sibling::node())
