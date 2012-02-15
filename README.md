@@ -94,16 +94,14 @@ Version:  0.9
 ### rule\#2
     rule(
       $pattern as xs:string,
-      $action as function(
-          function(node()*) as item()*,
-          node()
-        ) as item()*) as  function(xs:string) as function(*)?
+      $action as function(*)) as  function(xs:string) as function(*)?
 
   Returns a rule constructed from the pattern and action specified.  Rules are represented as a single function.   
 
-The arguments to the action function are:      
-* function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
-* node(): The context node that the rule is executed on.  
+Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:      
+* $mode as function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
+* $context as node(): The context node that the rule is executed on.    
+* $next-match as function() as item()\*: The next-mode function.  
    
 
 
@@ -111,10 +109,7 @@ The arguments to the action function are:
 
 * pattern as  xs:string: The pattern string that the rule must match.
 
-* action as  function(
-      function(node()\*) as item()\*,
-      node()
-    ) as item()\*: The action function to be executed when the rule is matched.
+* action as  function(\*): The action function to be executed when the rule is matched.
 
 
 #### Returns
@@ -123,17 +118,15 @@ The arguments to the action function are:
 ### rule\#3
     rule(
       $pattern as xs:string,
-      $action as function(
-          function(node()*) as item()*,
-          node()
-        ) as item()*,
+      $action as function(*),
       $resolver as item()) as  function(xs:string) as function(*)?
 
   Returns a rule constructed from the pattern and action specified.  Rules are represented as a single function.   
 
-The arguments to the action function are:      
+Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:      
 * function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
-* node(): The context node that the rule is executed on.  
+* node(): The context node that the rule is executed on.    
+* $next-match as function() as item()\*: The next-mode function.  
    
 
 
@@ -141,10 +134,7 @@ The arguments to the action function are:
 
 * pattern as  xs:string: The pattern string that the rule must match.
 
-* action as  function(
-      function(node()\*) as item()\*,
-      node()
-    ) as item()\*: The action function to be executed when the rule is matched.
+* action as  function(\*): The action function to be executed when the rule is matched.
 
 * resolver as  item(): Either an element from which to take the namespace bindings, or a function of type function(xs:string) as xs:QName.
 
@@ -155,19 +145,17 @@ The arguments to the action function are:
 ### predicate-rule\#2
     predicate-rule(
       $predicate as function(*),
-      $action as function(
-          function(node()*) as item()*,
-          node()
-        ) as item()*) as  function(xs:string) as function(*)?
+      $action as function(*)) as  function(xs:string) as function(*)?
 
   Returns a rule constructed from the predicate function and action specified.  Rules are represented as a single function.   
 
 The predicate function takes a node as an argument and returns true if the node matches.  Returning false or raising an error is considered a non-match. Typing the argument of the function  provided with a SequenceType of element(), attribute(), etc. will result in the predicate function  being optimized by only attempting to be matched against that type of name.
    
 
-The arguments to the action function are:      
+Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:      
 * function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
-* node(): The context node that the rule is executed on.  
+* node(): The context node that the rule is executed on.    
+* $next-match as function() as item()\*: The next-mode function.  
    
 
 
@@ -175,10 +163,7 @@ The arguments to the action function are:
 
 * predicate as  function(\*)
 
-* action as  function(
-      function(node()\*) as item()\*,
-      node()
-    ) as item()\*: The action function to be executed when the rule is matched.
+* action as  function(\*): The action function to be executed when the rule is matched.
 
 
 #### Returns
