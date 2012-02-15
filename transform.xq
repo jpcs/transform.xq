@@ -38,18 +38,25 @@ declare %private variable $tfm:magic as element() := <magic/>;
  : specified by the rules passed in as arguments. Call tfm:rule(), or
  : tfm:predicate-rule() to create rules to pass into this function.
  :
+ : <p>Mode functions take the following arguments:
+ : <ul>
+ :   <li>$nodes as node()*: The context nodes to execute the mode on.</li>
+ :   <li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li>
+ : </ul></p>
+ :
  : @param $rules: The sequence of rules to use to create the mode, in
  : increasing precedence.
  : @return A mode function.
  :
- : @see rule#2, rule#3, predicate-rule#2
+ : @see rule#2, rule#3, predicate-rule#2, param#2, param#3
  :)
 declare function tfm:mode(
   $rules as (function(xs:string) as function(*)?)*
-) as function(node()*) as item()*
+) as function(node()*,function() as item()*?) as item()*
 {
   let $map := fold-left(tfm:add-rule#2, map:create(), $rules)
-  return tfm:run-mode($map,?)
+  return tfm:run-mode($map,?,?)
 };
 
 (:~
@@ -58,26 +65,40 @@ declare function tfm:mode(
  : Call tfm:rule(), or tfm:predicate-rule() to create rules to pass into
  : this function.
  :
+ : <p>Mode functions take the following arguments:
+ : <ul>
+ :   <li>$nodes as node()*: The context nodes to execute the mode on.</li>
+ :   <li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li>
+ : </ul></p>
+ :
  : @param $mode: The mode to extend.
  : @param $rules: The sequence of rules to use to create the mode, in
  : increasing precedence.
  : @return A mode function.
  :
- : @see rule#2, rule#3, predicate-rule#2
+ : @see rule#2, rule#3, predicate-rule#2, param#2, param#3
  :)
 declare function tfm:extend-mode(
-  $mode as function(node()*) as item()*,
+  $mode as function(node()*,function() as item()*?) as item()*,
   $rules as (function(xs:string) as function(*)?)*
-) as function(node()*) as item()*
+) as function(node()*,function() as item()*?) as item()*
 {
-  let $map := $mode($tfm:magic)
+  let $map := $mode($tfm:magic,())
   let $map := fold-left(tfm:add-rule#2, $map, $rules)
-  return tfm:run-mode($map,?)
+  return tfm:run-mode($map,?,?)
 };
 
 (:~
  : Returns a mode function constructed from the functions
  : annotated with the given name in the %tfm:rule() annotation.
+ :
+ : <p>Mode functions take the following arguments:
+ : <ul>
+ :   <li>$nodes as node()*: The context nodes to execute the mode on.</li>
+ :   <li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li>
+ : </ul></p>
  :
  : @param $name: The name(s) used in the %tfm:rule() annotation in the
  : functions for the mode to construct.
@@ -85,10 +106,12 @@ declare function tfm:extend-mode(
  :
  : @error If reflection capabilites are not supported by your XQuery
  : implementation.
+ :
+ : @see param#2, param#3
  :)
 declare function tfm:named-mode(
   $name as xs:string*
-) as function(node()*) as item()*
+) as function(node()*,function() as item()*?) as item()*
 {
   tfm:mode(tfm:named-rules($name))
 };
@@ -98,6 +121,13 @@ declare function tfm:named-mode(
  : mode argument, adding additional rules constructed from the functions
  : annotated with the given name in the %tfm:rule() annotation.
  :
+ : <p>Mode functions take the following arguments:
+ : <ul>
+ :   <li>$nodes as node()*: The context nodes to execute the mode on.</li>
+ :   <li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li>
+ : </ul></p>
+ :
  : @param $mode: The mode to extend.
  : @param $name: The name(s) used in the %tfm:rule() annotation in the
  : functions for the mode to construct.
@@ -105,11 +135,13 @@ declare function tfm:named-mode(
  :
  : @error If reflection capabilites are not supported by your XQuery
  : implementation.
+ :
+ : @see param#2, param#3
  :)
 declare function tfm:named-extend-mode(
-  $mode as function(node()*) as item()*,
+  $mode as function(node()*,function() as item()*?) as item()*,
   $name as xs:string*
-) as function(node()*) as item()*
+) as function(node()*,function() as item()*?) as item()*
 {
   tfm:extend-mode($mode, tfm:named-rules($name))
 };
@@ -196,19 +228,21 @@ declare %private function tfm:add($map,$key,$rule)
 
 declare %private function tfm:run-mode(
   $map as function() as item()+,
-  $nodes as node()*
+  $nodes as node()*,
+  $params as function() as item()*?
 ) as item()*
 {
   if($nodes[1] is $tfm:magic) then $map
-  else tfm:_run-mode($map,$nodes)
+  else tfm:apply-templates($map,$nodes,$params)
 };
 
-declare %private function tfm:_run-mode(
+declare %private function tfm:apply-templates(
   $map as function() as item()+,
-  $nodes as node()*
+  $nodes as node()*,
+  $params as function() as item()*?
 ) as item()*
 {
-  let $mode := tfm:_run-mode($map,?)
+  let $mode := tfm:apply-templates($map,?,?)
   for $node in $nodes
   let $rules :=
     typeswitch($node)
@@ -221,13 +255,14 @@ declare %private function tfm:_run-mode(
       default return error(xs:QName("tfm:NAMESPACENODE"),
         "Transformation of namespace nodes not currently supported")
   return
-    tfm:next-match($mode,$rules,$node)
+    tfm:next-match($mode,$rules,$node,$params)
 };
 
 declare %private function tfm:next-match(
-  $mode as function(node()*) as item()*,
+  $mode as function(node()*,function() as item()*?) as item()*,
   $rules as (function(xs:string) as function(*)?)*,
-  $node as node()
+  $node as node(),
+  $params as function() as item()*?
 ) as item()*
 {
   let $r :=
@@ -237,14 +272,14 @@ declare %private function tfm:next-match(
         else ()
       }, (), $rules)
   let $matched-rule := head($r)
-  let $next-match := function() { tfm:next-match($mode,tail($r),$node) }
+  let $next-match := tfm:next-match($mode,tail($r),$node,?)
   return
     (: TBD template parameters - jpcs :)
     if(exists($matched-rule)) then
-      $matched-rule("action")($mode,$node,$next-match)
+      $matched-rule("action")($mode,$node,$params,$next-match)
     else (: default rule :)
       typeswitch($node)
-        case element() | document-node() return $node/node() ! $mode(.)
+        case element() | document-node() return $mode($node/node(),$params)
         case attribute() | text() return text { $node }
         default return ()
 };
@@ -256,14 +291,22 @@ declare %private function tfm:next-match(
  : <p>Action functions should take between 2 and 3 arguments. If the function takes
  : fewer arguments, they are the arguments at the start of this list:
  : <ul>
- :   <li>$mode as function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.</li>
+ :   <li>$mode as function(node()*) as item()*:
+ : The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type
+ : function(node()*,function() as item()*?) as item()*, which accepts parameters as the second argument.</li>
  :   <li>$context as node(): The context node that the rule is executed on.</li>
- :   <li>$next-match as function() as item()*: The next-mode function.</li>
+ :   <li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li>
+ :   <li>$next-match as function() as item()*: The next-mode function.
+ : Can alternately be specified as type function(function() as item()*?) as item()*,
+ : which accepts parameters as the second argument.</li>
  : </ul></p>
  :
  : @param $pattern: The pattern string that the rule must match.
  : @param $action: The action function to be executed when the rule is matched.
  : @return The rule wrapped as a function.
+ :
+ : @see param#2, param#3
  :)
 declare function tfm:rule(
   $pattern as xs:string,
@@ -280,9 +323,15 @@ declare function tfm:rule(
  : <p>Action functions should take between 2 and 3 arguments. If the function takes
  : fewer arguments, they are the arguments at the start of this list:
  : <ul>
- :   <li>function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.</li>
- :   <li>node(): The context node that the rule is executed on.</li>
- :   <li>$next-match as function() as item()*: The next-mode function.</li>
+ :   <li>$mode as function(node()*) as item()*:
+ : The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type
+ : function(node()*,function() as item()*?) as item()*, which accepts parameters as the second argument.</li>
+ :   <li>$context as node(): The context node that the rule is executed on.</li>
+ :   <li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li>
+ :   <li>$next-match as function() as item()*: The next-mode function.
+ : Can alternately be specified as type function(function() as item()*?) as item()*,
+ : which accepts parameters as the second argument.</li>
  : </ul></p>
  :
  : @param $pattern: The pattern string that the rule must match.
@@ -290,6 +339,8 @@ declare function tfm:rule(
  : @param $resolver: Either an element from which to take the namespace bindings, or a function
  : of type function(xs:string) as xs:QName.
  : @return The rule wrapped as a function.
+ :
+ : @see param#2, param#3
  :)
 declare function tfm:rule(
   $pattern as xs:string,
@@ -312,9 +363,15 @@ declare function tfm:rule(
  : <p>Action functions should take between 2 and 3 arguments. If the function takes
  : fewer arguments, they are the arguments at the start of this list:
  : <ul>
- :   <li>function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes.</li>
- :   <li>node(): The context node that the rule is executed on.</li>
- :   <li>$next-match as function() as item()*: The next-mode function.</li>
+ :   <li>$mode as function(node()*) as item()*:
+ : The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type
+ : function(node()*,function() as item()*?) as item()*, which accepts parameters as the second argument.</li>
+ :   <li>$context as node(): The context node that the rule is executed on.</li>
+ :   <li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li>
+ :   <li>$next-match as function() as item()*: The next-mode function.
+ : Can alternately be specified as type function(function() as item()*?) as item()*,
+ : which accepts parameters as the second argument.</li>
  : </ul></p>
  :
  : @param $pattern: The pattern string that the rule must match.
@@ -322,6 +379,8 @@ declare function tfm:rule(
  : @param $resolver: Either an element from which to take the namespace bindings, or a function
  : of type function(xs:string) as xs:QName which resolves a lexical QName to an xs:QName.
  : @return The rule wrapped as a function.
+ :
+ : @see param#2, param#3
  :)
 declare function tfm:predicate-rule(
   $predicate as function(*),
@@ -339,35 +398,101 @@ declare function tfm:predicate-rule(
     }
 };
 
+(:~ Checks the action function signature, and converts to the expected signature :)
 declare %private function tfm:check-action(
   $action as function(*)
 ) as function(
-  function(node()*) as item()*,
+  function(node()*,function() as item()*?) as item()*,
   node(),
-  function() as item()*
+  function() as item()*?,
+  function(function() as item()*?) as item()*
 ) as item()*
 {
   typeswitch($action)
+    (: 2 args, no params :)
     case function(
           function(node()*) as item()*,
           node()
         ) as item()*
       return function(
-          $mode as function(node()*) as item()*,
+          $mode as function(node()*,function() as item()*?) as item()*,
           $node as node(),
-          $next-match as function() as item()*
+          $params as function() as item()*?,
+          $next-match as function(function() as item()*?) as item()*
+        ) as item()*
+        {
+          $action($mode(?,()),$node)
+        }
+    (: 2 args, params :)
+    case function(
+          function(node()*,function() as item()*?) as item()*,
+          node()
+        ) as item()*
+      return function(
+          $mode as function(node()*,function() as item()*?) as item()*,
+          $node as node(),
+          $params as function() as item()*?,
+          $next-match as function(function() as item()*?) as item()*
         ) as item()*
         {
           $action($mode,$node)
         }
-      case function(
+    (: 3 args, no params :)
+    case function(
           function(node()*) as item()*,
           node(),
+          function() as item()+
+        ) as item()*
+      return function(
+          $mode as function(node()*,function() as item()*?) as item()*,
+          $node as node(),
+          $params as function() as item()*?,
+          $next-match as function(function() as item()*?) as item()*
+        ) as item()*
+        {
+          $action($mode(?,()),$node,$params)
+        }
+    (: 3 args, params :)
+    case function(
+          function(node()*,function() as item()*?) as item()*,
+          node(),
+          function() as item()+
+        ) as item()*
+      return function(
+          $mode as function(node()*,function() as item()*?) as item()*,
+          $node as node(),
+          $params as function() as item()*?,
+          $next-match as function(function() as item()*?) as item()*
+        ) as item()*
+        {
+          $action($mode,$node,$params)
+        }
+    (: 4 args, no params :)
+    case function(
+          function(node()*,function() as item()*?) as item()*,
+          node(),
+          function() as item()*?,
           function() as item()*
+        ) as item()*
+      return function(
+          $mode as function(node()*,function() as item()*?) as item()*,
+          $node as node(),
+          $params as function() as item()*?,
+          $next-match as function(function() as item()*?) as item()*
+        ) as item()*
+        {
+          $action($mode(?,()),$node,$params,function() { $next-match(()) })
+        }
+    (: 4 args, params :)
+    case function(
+          function(node()*,function() as item()*?) as item()*,
+          node(),
+          function() as item()*?,
+          function(function() as item()*?) as item()*
         ) as item()*
       return $action
     default return error(xs:QName("tfm:BADACTION"),
-      "The action function has the wrong type")
+      "The action function has the wrong function signature")
 };
 
 (:~
@@ -429,4 +554,54 @@ declare function tfm:pattern(
       default return error(xs:QName("tfm:BADRESOLVER"),
         "The resolver should either be of type element() or function(xs:string) as xs:QName")
   return pat:compile-pattern($pattern, $r)
+};
+
+(:~
+ : Helper function to allow simple construction of a parameters map suitable for passing
+ : to a mode function, given the parameter name and value.
+ :
+ : @param $name: The parameter name.
+ : @param $value: The parameter value.
+ : @return An rbtree.xq map containing the parameter.
+ :)
+declare function tfm:param(
+  $name as xs:string,
+  $value as item()*
+) as function() as item()*
+{
+  map:put(map:create(),$name,$value)
+};
+
+(:~
+ : Helper function to allow simple construction of a parameters map suitable for passing
+ : to a mode function, given an existing map, the parameter name, and value.
+ :
+ : @param $params: An existing rbtree.xq map of parameters, or the empty sequence.
+ : @param $name: The parameter name.
+ : @param $value: The parameter value.
+ : @return An rbtree.xq map containing the original parameters augmeneted with the new parameter.
+ :)
+declare function tfm:param(
+  $params as function() as item()*?,
+  $name as xs:string,
+  $value as item()*
+) as function() as item()*
+{
+  let $params := if(empty($params)) then map:create() else $params
+  return map:put($params,$name,$value)
+};
+
+(:~
+ : Helper function to retrive a parameter from a parameters map.
+ :
+ : @param $params: An existing rbtree.xq map of parameters, or the empty sequence.
+ : @param $name: The parameter name.
+ : @return The parameter value, or empty sequence if not found.
+ :)
+declare function tfm:get-param(
+  $params as function() as item()*?,
+  $name as xs:string
+) as item()*
+{
+  if(empty($params)) then () else map:get($params,$name)
 };

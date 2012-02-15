@@ -69,5 +69,6 @@ return $mode(
       <title>Two</title>
       <para>There lived...</para>
     </section>
-  </article>
+  </article>,
+  ()
 )

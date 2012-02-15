@@ -64,7 +64,7 @@ function local:extend1($mode, $node)
 };
 
 declare %tfm:rule("extend","article/title")
-function local:extend1($mode, $node, $next-match)
+function local:extend1($mode, $node, $params, $next-match)
 {
   <hr xmlns="http://www.w3.org/1999/xhtml"/>, $next-match()
 };
@@ -94,5 +94,6 @@ return $emode(
       <title>Two</title>
       <para>There lived...</para>
     </section>
-  </article>
+  </article>,
+  ()
 )

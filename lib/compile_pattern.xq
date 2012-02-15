@@ -227,7 +227,7 @@ declare %private function pat:compile-nametest($prev, $qn, $resolver)
         local-name($n) eq $localname and
           (empty($prev) or $prev($n/..))
       }
-    case element(Star) return
+    case element(Star) | empty-sequence() return
       function($n) {
         empty($prev) or $prev($n/..)
       }

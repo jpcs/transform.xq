@@ -53,7 +53,7 @@ let $emode := tfm:extend-mode($mode,
   {
     "__", $node, "__"
   }),
-  tfm:rule("article/title", function($mode, $node, $next-match)
+  tfm:rule("article/title", function($mode, $node, $params, $next-match)
   {
     <hr xmlns="http://www.w3.org/1999/xhtml"/>, $next-match()
   }),
@@ -84,5 +84,6 @@ return $emode(
       <title>Two</title>
       <para>There lived...</para>
     </section>
-  </article>
+  </article>,
+  ()
 )
