@@ -8,8 +8,29 @@ An extensible transformation library for XQuery 3.0.
 
 Author:  John Snelson  
 Version:  0.9 
+
+## Table of Contents
+
+* Functions
+    * [mode\#1](#func_mode_1)
+    * [extend-mode\#2](#func_extend-mode_2)
+    * [named-mode\#1](#func_named-mode_1)
+    * [named-extend-mode\#2](#func_named-extend-mode_2)
+    * [named-rules\#1](#func_named-rules_1)
+    * [rule\#2](#func_rule_2)
+    * [rule\#3](#func_rule_3)
+    * [predicate-rule\#2](#func_predicate-rule_2)
+    * [resolver\#1](#func_resolver_1)
+    * [pattern\#1](#func_pattern_1)
+    * [pattern\#2](#func_pattern_2)
+    * [param\#2](#func_param_2)
+    * [param\#3](#func_param_3)
+    * [get-param\#2](#func_get-param_2)
+
+
 ## Functions
 
+<a id="func_mode_1"/>
 ### mode\#1
 ```xquery
 mode(
@@ -33,6 +54,7 @@ Mode functions take the following arguments:
 #### Returns
 *  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
+<a id="func_extend-mode_2"/>
 ### extend-mode\#2
 ```xquery
 extend-mode(
@@ -59,6 +81,7 @@ Mode functions take the following arguments:
 #### Returns
 *  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
+<a id="func_named-mode_1"/>
 ### named-mode\#1
 ```xquery
 named-mode(
@@ -82,6 +105,7 @@ Mode functions take the following arguments:
 #### Returns
 *  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
+<a id="func_named-extend-mode_2"/>
 ### named-extend-mode\#2
 ```xquery
 named-extend-mode(
@@ -108,6 +132,7 @@ Mode functions take the following arguments:
 #### Returns
 *  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
+<a id="func_named-rules_1"/>
 ### named-rules\#1
 ```xquery
 named-rules(
@@ -125,6 +150,7 @@ named-rules(
 #### Returns
 *  (function(xs:string) as function(\*)?)\*: A sequence of rules wrapped as functions, in increasing order by the priority from the %tfm:rule annotation.
 
+<a id="func_rule_2"/>
 ### rule\#2
 ```xquery
 rule(
@@ -153,6 +179,7 @@ Action functions should take between 2 and 3 arguments. If the function takes  f
 #### Returns
 *  function(xs:string) as function(\*)?: The rule wrapped as a function.
 
+<a id="func_rule_3"/>
 ### rule\#3
 ```xquery
 rule(
@@ -184,6 +211,7 @@ Action functions should take between 2 and 3 arguments. If the function takes  f
 #### Returns
 *  function(xs:string) as function(\*)?: The rule wrapped as a function.
 
+<a id="func_predicate-rule_2"/>
 ### predicate-rule\#2
 ```xquery
 predicate-rule(
@@ -215,6 +243,7 @@ Action functions should take between 2 and 3 arguments. If the function takes  f
 #### Returns
 *  function(xs:string) as function(\*)?: The rule wrapped as a function.
 
+<a id="func_resolver_1"/>
 ### resolver\#1
 ```xquery
 resolver(
@@ -232,6 +261,7 @@ resolver(
 #### Returns
 *  function(xs:string) as xs:QName: The resolver function.
 
+<a id="func_pattern_1"/>
 ### pattern\#1
 ```xquery
 pattern(
@@ -249,6 +279,7 @@ pattern(
 #### Returns
 *  function(\*): The predicate function.
 
+<a id="func_pattern_2"/>
 ### pattern\#2
 ```xquery
 pattern(
@@ -269,6 +300,7 @@ pattern(
 #### Returns
 *  function(\*): The predicate function.
 
+<a id="func_param_2"/>
 ### param\#2
 ```xquery
 param(
@@ -289,6 +321,7 @@ param(
 #### Returns
 *  function() as item()\*: An rbtree.xq map containing the parameter.
 
+<a id="func_param_3"/>
 ### param\#3
 ```xquery
 param(
@@ -312,6 +345,7 @@ param(
 #### Returns
 *  function() as item()\*: An rbtree.xq map containing the original parameters augmeneted with the new parameter.
 
+<a id="func_get-param_2"/>
 ### get-param\#2
 ```xquery
 get-param(
