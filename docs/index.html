@@ -1,63 +1,727 @@
-<html xmlns:c="http://www.w3.org/ns/xproc-step" xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta http-equiv="Generator" content="xquerydoc - https://github.com/xquery/xquerydoc"/><title>xqDoc - </title><style type="text/css">
-	html {
-        width:100%;
-	margin:0;
-	padding:0;
-	color:#000;
-        overflow-y: hidden;
-	}
-        h1,h2,h3,h4,h5,h6 { font-family: Tahoma, Helvetica, Arial, sans-serif; }
-        body { padding: 0; background-color:#FFFFFF; color: #16291A; 
-        font: normal normal 14px Tahoma, Verdana,"Lucida Sans","Lucida Sans Unicode", Arial, sans-serif;
-	}
-        a:link    { color: #16291A }
-        a:visited { color: #16291A }
-        a:active  { color: #16291A }
-	#wrap {
-	width:100%;
-        height:100%;
-	margin:0 auto;
-	}
-	#header {
-    	padding:5px 10px;
-	}
-	h1 {
-	margin:0;
-            }
-	#main {
-	float:right;
-	width:75%;
-        height:100%;
-	padding:0px;
-	}
-	h2 {
-	margin:0 0 1em;
-	}
-	#sidebar {
-        float:left;
-        height:100%;
-	width:25%;
-	padding:0px;
-        overflow:auto;
-	}
-	#footer {
-	clear:both;
-	padding:5px 10px;
-	background:#cc9;
-	}
-	#footer p {
-	margin:0;
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta http-equiv="Generator" content="xquerydoc - https://github.com/xquery/xquerydoc"/><title>xqDoc - </title><style type="text/css">
+          body {
+          font-family: Helvetica;
+          padding: 0.5em  1em;
+          }
+          pre {
+          font-family: Inconsolata, Consolas, monospace;
+          }
+          ol.results {
+          padding-left: 0;
+          }
+          .footer {
+          text-align:right;
+          border-top: solid 4px;
+          padding: 0.25em 0.5em;
+          font-size: 85%;
+          color: #999;
+          }
+          li.result {
+          list-style-position: inside;
+          list-style: none;
+          height:140px;
+          }
+          h2 {
+          display: inline-block;
+          margin: 0;
+          }
+
+          h2 a,
+          .result h3 a {
+          text-decoration: inherit;
+          color: inherit;
+          }
+          h3{
+	  font-size: 140%;
+	  background-color: #aaa;
+	  border-bottom: 1px solid #000;
+	  width: 100%;
+	  }
+          h4{
+	  font-size: 100%;
+	  background-color: #ddd;
+	  width: 90%;
+	  }
+
+          .namespace {
+          color: #999;
+          }
+          .namespace:before {
+          content: "{";
+          }
+          .namespace:after {
+          content: "}";
+          }
+          table{
+          width:75%;
+          float:right;
+          }
+          td {
+          height:100px;
+          width:50%;
+          vertical-align:text-top;
+          }
+        </style><script src="lib/prettify.js" type="text/javascript"> </script><script src="lib/lang-xq.js" type="text/javascript"> </script><link rel="stylesheet" type="text/css" href="lib/prettify.css"/></head><body class="home"><div id="main"><h1><span class="namespace">http://snelson.org.uk/functions/transform</span>  library module </h1><p><h1>transform.xq</h1><p>An extensible transformation library for XQuery 3.0.</p></p><p>Author:  John Snelson  </p><p>Version:  0.9 </p><div id="variables"><h3>Variables</h3></div><div id="functions"><h3>Functions</h3><div id="func_mode_1"><h4><pre class="prettyprint lang-xq"><u>Function</u>: mode(
+  $rules as (function(xs:string) as function(*)?)*
+) as  function(node()*,function() as item()*?) as item()*</pre></h4><p>Returns a mode function, which can be called to perform the transformation specified by the rules passed in as arguments. Call tfm:rule(), or tfm:predicate-rule() to create rules to pass into this function.<p>Mode functions take the following arguments:<ul><li>$nodes as node()*: The context nodes to execute the mode on.</li><li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode, or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li></ul></p></p>
+    See also:
+    <a href="#func_rule_2">rule#2</a>, <a href="#func_rule_3">rule#3</a>, <a href="#func_predicate-rule_2">predicate-rule#2</a>, <a href="#func_param_2">param#2</a>, <a href="#func_param_3">param#3</a><h5>Params</h5><ul><li>rules as  (function(xs:string) as function(*)?)*: The sequence of rules to use to create the mode, in increasing precedence.</li></ul><h5>Returns</h5><ul><li> function(node()*,function() as item()*?) as item()*: A mode function.</li></ul></div><div id="func_extend-mode_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: extend-mode(
+  $mode as function(node()*,function() as item()*?) as item()*,
+  $rules as (function(xs:string) as function(*)?)*
+) as  function(node()*,function() as item()*?) as item()*</pre></h4><p>Returns a new mode function, which extends the transformation from the mode argument, adding the additional rules in higher precedence. Call tfm:rule(), or tfm:predicate-rule() to create rules to pass into this function.<p>Mode functions take the following arguments:<ul><li>$nodes as node()*: The context nodes to execute the mode on.</li><li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode, or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li></ul></p></p>
+    See also:
+    <a href="#func_rule_2">rule#2</a>, <a href="#func_rule_3">rule#3</a>, <a href="#func_predicate-rule_2">predicate-rule#2</a>, <a href="#func_param_2">param#2</a>, <a href="#func_param_3">param#3</a><h5>Params</h5><ul><li>mode as  function(node()*,function() as item()*?) as item()*: The mode to extend.</li><li>rules as  (function(xs:string) as function(*)?)*: The sequence of rules to use to create the mode, in increasing precedence.</li></ul><h5>Returns</h5><ul><li> function(node()*,function() as item()*?) as item()*: A mode function.</li></ul></div><div id="func_named-mode_1"><h4><pre class="prettyprint lang-xq"><u>Function</u>: named-mode(
+  $name as xs:string*
+) as  function(node()*,function() as item()*?) as item()*</pre></h4><p>Returns a mode function constructed from the functions annotated with the given name in the %tfm:rule() annotation.<p>Mode functions take the following arguments:<ul><li>$nodes as node()*: The context nodes to execute the mode on.</li><li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode, or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li></ul></p></p>
+    See also:
+    <a href="#func_param_2">param#2</a>, <a href="#func_param_3">param#3</a><h5>Params</h5><ul><li>name as  xs:string*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.</li></ul><h5>Returns</h5><ul><li> function(node()*,function() as item()*?) as item()*: A mode function.</li></ul><h5>Errors</h5><p>If reflection capabilites are not supported by your XQuery implementation.</p></div><div id="func_named-extend-mode_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: named-extend-mode(
+  $mode as function(node()*,function() as item()*?) as item()*,
+  $name as xs:string*
+) as  function(node()*,function() as item()*?) as item()*</pre></h4><p>Returns a new mode function, which extends the transformation from the mode argument, adding additional rules constructed from the functions annotated with the given name in the %tfm:rule() annotation.<p>Mode functions take the following arguments:<ul><li>$nodes as node()*: The context nodes to execute the mode on.</li><li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode, or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li></ul></p></p>
+    See also:
+    <a href="#func_param_2">param#2</a>, <a href="#func_param_3">param#3</a><h5>Params</h5><ul><li>mode as  function(node()*,function() as item()*?) as item()*: The mode to extend.</li><li>name as  xs:string*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.</li></ul><h5>Returns</h5><ul><li> function(node()*,function() as item()*?) as item()*: A mode function.</li></ul><h5>Errors</h5><p>If reflection capabilites are not supported by your XQuery implementation.</p></div><div id="func_named-rules_1"><h4><pre class="prettyprint lang-xq"><u>Function</u>: named-rules(
+  $name as xs:string*
+) as  (function(xs:string) as function(*)?)*</pre></h4><p>Returns a sequence of rules constructed from the functions annotated with the given name(s) in the %tfm:rule() annotation.</p><h5>Params</h5><ul><li>name as  xs:string*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.</li></ul><h5>Returns</h5><ul><li> (function(xs:string) as function(*)?)*: A sequence of rules wrapped as functions, in increasing order by the priority from the %tfm:rule annotation.</li></ul><h5>Errors</h5><p>If reflection capabilites are not supported by your XQuery implementation.</p></div><div id="func_rule_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: rule(
+  $pattern as xs:string,
+  $action as function(*)
+) as  function(xs:string) as function(*)?</pre></h4><p>Returns a rule constructed from the pattern and action specified. Rules are represented as a single function.<p>Action functions should take between 2 and 3 arguments. If the function takes fewer arguments, they are the arguments at the start of this list:<ul><li>$mode as function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type function(node()*,function() as item()*?) as item()*, which accepts parameters as the second argument.</li><li>$context as node(): The context node that the rule is executed on.</li><li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode, or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li><li>$next-match as function() as item()*: The next-mode function. Can alternately be specified as type function(function() as item()*?) as item()*, which accepts parameters as the second argument.</li></ul></p></p>
+    See also:
+    <a href="#func_param_2">param#2</a>, <a href="#func_param_3">param#3</a><h5>Params</h5><ul><li>pattern as  xs:string: The pattern string that the rule must match.</li><li>action as  function(*): The action function to be executed when the rule is matched.</li></ul><h5>Returns</h5><ul><li> function(xs:string) as function(*)?: The rule wrapped as a function.</li></ul></div><div id="func_rule_3"><h4><pre class="prettyprint lang-xq"><u>Function</u>: rule(
+  $pattern as xs:string,
+  $action as function(*),
+  $resolver as item()
+) as  function(xs:string) as function(*)?</pre></h4><p>Returns a rule constructed from the pattern and action specified. Rules are represented as a single function.<p>Action functions should take between 2 and 3 arguments. If the function takes fewer arguments, they are the arguments at the start of this list:<ul><li>$mode as function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type function(node()*,function() as item()*?) as item()*, which accepts parameters as the second argument.</li><li>$context as node(): The context node that the rule is executed on.</li><li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode, or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li><li>$next-match as function() as item()*: The next-mode function. Can alternately be specified as type function(function() as item()*?) as item()*, which accepts parameters as the second argument.</li></ul></p></p>
+    See also:
+    <a href="#func_param_2">param#2</a>, <a href="#func_param_3">param#3</a><h5>Params</h5><ul><li>pattern as  xs:string: The pattern string that the rule must match.</li><li>action as  function(*): The action function to be executed when the rule is matched.</li><li>resolver as  item(): Either an element from which to take the namespace bindings, or a function of type function(xs:string) as xs:QName.</li></ul><h5>Returns</h5><ul><li> function(xs:string) as function(*)?: The rule wrapped as a function.</li></ul></div><div id="func_predicate-rule_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: predicate-rule(
+  $predicate as function(*),
+  $action as function(*)
+) as  function(xs:string) as function(*)?</pre></h4><p>Returns a rule constructed from the predicate function and action specified. Rules are represented as a single function.<p>The predicate function takes a node as an argument and returns true if the node matches. Returning false or raising an error is considered a non-match. Typing the argument of the function provided with a SequenceType of element(), attribute(), etc. will result in the predicate function being optimized by only attempting to be matched against that type of name.</p><p>Action functions should take between 2 and 3 arguments. If the function takes fewer arguments, they are the arguments at the start of this list:<ul><li>$mode as function(node()*) as item()*: The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type function(node()*,function() as item()*?) as item()*, which accepts parameters as the second argument.</li><li>$context as node(): The context node that the rule is executed on.</li><li>$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode, or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.</li><li>$next-match as function() as item()*: The next-mode function. Can alternately be specified as type function(function() as item()*?) as item()*, which accepts parameters as the second argument.</li></ul></p></p>
+    See also:
+    <a href="#func_param_2">param#2</a>, <a href="#func_param_3">param#3</a><h5>Params</h5><ul><li>predicate as  function(*)</li><li>action as  function(*): The action function to be executed when the rule is matched.</li></ul><h5>Returns</h5><ul><li> function(xs:string) as function(*)?: The rule wrapped as a function.</li></ul></div><div id="func_resolver_1"><h4><pre class="prettyprint lang-xq"><u>Function</u>: resolver(
+  $element as element()
+) as  function(xs:string) as xs:QName</pre></h4><p>Returns a prefix resolver function that resolves prefixes by looking them up in the namespace bindings of the element.</p><h5>Params</h5><ul><li>element as  element(): The element whose namespace bindings should be used.</li></ul><h5>Returns</h5><ul><li> function(xs:string) as xs:QName: The resolver function.</li></ul></div><div id="func_pattern_1"><h4><pre class="prettyprint lang-xq"><u>Function</u>: pattern(
+  $pattern as xs:string
+) as  function(*)</pre></h4><p>Compiles the pattern given in the string argument to a predicate function, which takes a node as the argument, and returns true if the node matches the pattern. If the predicate returns false or raises an error, the node does not match the pattern.</p><h5>Params</h5><ul><li>pattern as  xs:string: The pattern string.</li></ul><h5>Returns</h5><ul><li> function(*): The predicate function.</li></ul></div><div id="func_pattern_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: pattern(
+  $pattern as xs:string,
+  $resolver as item()
+) as  function(*)</pre></h4><p>Compiles the pattern given in the string argument to a predicate function, which takes a node as the argument, and returns true if the node matches the pattern. If the predicate returns false or raises an error, the node does not match the pattern.</p><h5>Params</h5><ul><li>pattern as  xs:string: The pattern string.</li><li>resolver as  item(): Either an element from which to take the namespace bindings, or a function of type function(xs:string) as xs:QName which resolves a lexical QName to an xs:QName.</li></ul><h5>Returns</h5><ul><li> function(*): The predicate function.</li></ul></div><div id="func_param_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: param(
+  $name as xs:string,
+  $value as item()*
+) as  function() as item()*</pre></h4><p>Helper function to allow simple construction of a parameters map suitable for passing to a mode function, given the parameter name and value.</p><h5>Params</h5><ul><li>name as  xs:string: The parameter name.</li><li>value as  item()*: The parameter value.</li></ul><h5>Returns</h5><ul><li> function() as item()*: An rbtree.xq map containing the parameter.</li></ul></div><div id="func_param_3"><h4><pre class="prettyprint lang-xq"><u>Function</u>: param(
+  $params as function() as item()*?,
+  $name as xs:string,
+  $value as item()*
+) as  function() as item()*</pre></h4><p>Helper function to allow simple construction of a parameters map suitable for passing to a mode function, given an existing map, the parameter name, and value.</p><h5>Params</h5><ul><li>params as  function() as item()*?: An existing rbtree.xq map of parameters, or the empty sequence.</li><li>name as  xs:string: The parameter name.</li><li>value as  item()*: The parameter value.</li></ul><h5>Returns</h5><ul><li> function() as item()*: An rbtree.xq map containing the original parameters augmeneted with the new parameter.</li></ul></div><div id="func_get-param_2"><h4><pre class="prettyprint lang-xq"><u>Function</u>: get-param(
+  $params as function() as item()*?,
+  $name as xs:string
+) as  item()*</pre></h4><p>Helper function to retrive a parameter from a parameters map.</p><h5>Params</h5><ul><li>params as  function() as item()*?: An existing rbtree.xq map of parameters, or the empty sequence.</li><li>name as  xs:string: The parameter name.</li></ul><h5>Returns</h5><ul><li> item()*: The parameter value, or empty sequence if not found.</li></ul></div></div><div><h3>Original Source Code</h3><pre class="prettyprint lang-xq">xquery version "3.0";
+
+(:
+ : Copyright (c) 2011 John Snelson
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+
+(:~
+ : &lt;h1&gt;transform.xq&lt;/h1&gt;
+ : &lt;p&gt;An extensible transformation library for XQuery 3.0.&lt;/p&gt;
+ :
+ : @author John Snelson
+ : @version 0.9
+ :)
+module namespace tfm = "http://snelson.org.uk/functions/transform";
+
+import module namespace pat = "http://snelson.org.uk/functions/patterns" at "lib/compile_pattern.xq";
+import module namespace map = "http://snelson.org.uk/functions/map" at "lib/map.xq";
+
+declare default function namespace "http://www.w3.org/2005/xpath-functions";
+
+(:~ Magic value to get a mode function to return its map of rules :)
+declare %private variable $tfm:magic as element() := &lt;magic/&gt;;
+
+(:~
+ : Returns a mode function, which can be called to perform the transformation
+ : specified by the rules passed in as arguments. Call tfm:rule(), or
+ : tfm:predicate-rule() to create rules to pass into this function.
+ :
+ : &lt;p&gt;Mode functions take the following arguments:
+ : &lt;ul&gt;
+ :   &lt;li&gt;$nodes as node()*: The context nodes to execute the mode on.&lt;/li&gt;
+ :   &lt;li&gt;$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.&lt;/li&gt;
+ : &lt;/ul&gt;&lt;/p&gt;
+ :
+ : @param $rules: The sequence of rules to use to create the mode, in
+ : increasing precedence.
+ : @return A mode function.
+ :
+ : @see rule#2, rule#3, predicate-rule#2, param#2, param#3
+ :)
+declare function tfm:mode(
+  $rules as (function(xs:string) as function(*)?)*
+) as function(node()*,function() as item()*?) as item()*
+{
+  let $map := fold-left(tfm:add-rule#2, map:create(), $rules)
+  return tfm:run-mode($map,?,?)
+};
+
+(:~
+ : Returns a new mode function, which extends the transformation from the
+ : mode argument, adding the additional rules in higher precedence.
+ : Call tfm:rule(), or tfm:predicate-rule() to create rules to pass into
+ : this function.
+ :
+ : &lt;p&gt;Mode functions take the following arguments:
+ : &lt;ul&gt;
+ :   &lt;li&gt;$nodes as node()*: The context nodes to execute the mode on.&lt;/li&gt;
+ :   &lt;li&gt;$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.&lt;/li&gt;
+ : &lt;/ul&gt;&lt;/p&gt;
+ :
+ : @param $mode: The mode to extend.
+ : @param $rules: The sequence of rules to use to create the mode, in
+ : increasing precedence.
+ : @return A mode function.
+ :
+ : @see rule#2, rule#3, predicate-rule#2, param#2, param#3
+ :)
+declare function tfm:extend-mode(
+  $mode as function(node()*,function() as item()*?) as item()*,
+  $rules as (function(xs:string) as function(*)?)*
+) as function(node()*,function() as item()*?) as item()*
+{
+  let $map := $mode($tfm:magic,())
+  let $map := fold-left(tfm:add-rule#2, $map, $rules)
+  return tfm:run-mode($map,?,?)
+};
+
+(:~
+ : Returns a mode function constructed from the functions
+ : annotated with the given name in the %tfm:rule() annotation.
+ :
+ : &lt;p&gt;Mode functions take the following arguments:
+ : &lt;ul&gt;
+ :   &lt;li&gt;$nodes as node()*: The context nodes to execute the mode on.&lt;/li&gt;
+ :   &lt;li&gt;$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.&lt;/li&gt;
+ : &lt;/ul&gt;&lt;/p&gt;
+ :
+ : @param $name: The name(s) used in the %tfm:rule() annotation in the
+ : functions for the mode to construct.
+ : @return A mode function.
+ :
+ : @error If reflection capabilites are not supported by your XQuery
+ : implementation.
+ :
+ : @see param#2, param#3
+ :)
+declare function tfm:named-mode(
+  $name as xs:string*
+) as function(node()*,function() as item()*?) as item()*
+{
+  tfm:mode(tfm:named-rules($name))
+};
+
+(:~
+ : Returns a new mode function, which extends the transformation from the
+ : mode argument, adding additional rules constructed from the functions
+ : annotated with the given name in the %tfm:rule() annotation.
+ :
+ : &lt;p&gt;Mode functions take the following arguments:
+ : &lt;ul&gt;
+ :   &lt;li&gt;$nodes as node()*: The context nodes to execute the mode on.&lt;/li&gt;
+ :   &lt;li&gt;$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.&lt;/li&gt;
+ : &lt;/ul&gt;&lt;/p&gt;
+ :
+ : @param $mode: The mode to extend.
+ : @param $name: The name(s) used in the %tfm:rule() annotation in the
+ : functions for the mode to construct.
+ : @return A mode function.
+ :
+ : @error If reflection capabilites are not supported by your XQuery
+ : implementation.
+ :
+ : @see param#2, param#3
+ :)
+declare function tfm:named-extend-mode(
+  $mode as function(node()*,function() as item()*?) as item()*,
+  $name as xs:string*
+) as function(node()*,function() as item()*?) as item()*
+{
+  tfm:extend-mode($mode, tfm:named-rules($name))
+};
+
+(:~
+ : Returns a sequence of rules constructed from the functions
+ : annotated with the given name(s) in the %tfm:rule() annotation.
+ :
+ : @param $name: The name(s) used in the %tfm:rule() annotation in the
+ : functions for the mode to construct.
+ : @return A sequence of rules wrapped as functions, in
+ : increasing order by the priority from the %tfm:rule annotation.
+ :
+ : @error If reflection capabilites are not supported by your XQuery
+ : implementation.
+ :)
+declare function tfm:named-rules(
+  $name as xs:string*
+) as (function(xs:string) as function(*)?)*
+{
+  let $functions := tfm:functions()
+  let $annotation := tfm:annotation()
+  return
+    if(empty($functions) or empty($annotation)) then
+      error(xs:QName("tfm:NOTSUPPORTED"), "Named modes are not supported on your platform")
+    else
+      for $f in $functions()
+      let $a := $annotation($f, xs:QName("tfm:rule"))
+      where $a[1] = $name
+      order by number($a[3]) ascending empty least
+      return
+        if(empty($a[2])) then error(xs:QName("tfm:NOPATTERN"),
+          "No pattern specified on function: " || function-name($f) || "#" || function-arity($f))
+        else tfm:rule($a[2], $f)
+};
+
+declare %private function tfm:functions() as function() as function(*)*?
+{
+  (
+    (: Add fn:function-lookup() calls for platform specific versions of the function
+       to fetch all available functions. :)
+    function-lookup(fn:QName("http://marklogic.com/xdmp","xdmp:functions"),0)
+  )[1]
+};
+
+declare %private function tfm:annotation() as function(function(*),xs:QName) as item()*?
+{
+  (
+    (: Add fn:function-lookup() calls for platform specific versions of the function
+       to retrieve an annotation value from a function item. :)
+    function-lookup(fn:QName("http://marklogic.com/xdmp","xdmp:annotation"),2)
+  )[1]
+};
+
+declare %private function tfm:add-rule($map,$rule)
+{
+  let $predicate := $rule("predicate")
+  return
+    if(not($predicate instance of function(*))) then
+      error(xs:QName("tfm:BADPREDICATE"), "The predicate should be a function")
+    else if(function-arity($predicate) ne 1) then
+      error(xs:QName("tfm:BADPREDICATE"), "The predicate should have arity 1")
+    else
+      let $map := if($predicate instance of function(element()) as xs:boolean)
+        then tfm:add($map,"element",$rule) else $map
+      let $map := if($predicate instance of function(attribute()) as xs:boolean)
+        then tfm:add($map,"attribute",$rule) else $map
+      let $map := if($predicate instance of function(document-node()) as xs:boolean)
+        then tfm:add($map,"document",$rule) else $map
+      let $map := if($predicate instance of function(comment()) as xs:boolean)
+        then tfm:add($map,"comment",$rule) else $map
+      let $map := if($predicate instance of function(text()) as xs:boolean)
+        then tfm:add($map,"text",$rule) else $map
+      let $map := if($predicate instance of function(processing-instruction()) as xs:boolean)
+        then tfm:add($map,"pi",$rule) else $map
+      (: TBD namespace nodes - jpcs :)
+      return $map
+};
+
+declare %private function tfm:add($map,$key,$rule)
+{
+  map:put($map,$key,($rule,map:get($map,$key)))
+};
+
+declare %private function tfm:run-mode(
+  $map as function() as item()+,
+  $nodes as node()*,
+  $params as function() as item()*?
+) as item()*
+{
+  if($nodes[1] is $tfm:magic) then $map
+  else tfm:apply-templates($map,$nodes,$params)
+};
+
+declare %private function tfm:apply-templates(
+  $map as function() as item()+,
+  $nodes as node()*,
+  $params as function() as item()*?
+) as item()*
+{
+  let $mode := tfm:apply-templates($map,?,?)
+  for $node in $nodes
+  let $rules :=
+    typeswitch($node)
+      case element() return map:get($map,"element")
+      case attribute() return map:get($map,"attribute")
+      case document-node() return map:get($map,"document")
+      case comment() return map:get($map,"comment")
+      case text() return map:get($map,"text")
+      case processing-instruction() return map:get($map,"pi")
+      default return error(xs:QName("tfm:NAMESPACENODE"),
+        "Transformation of namespace nodes not currently supported")
+  return
+    tfm:next-match($mode,$rules,$node,$params)
+};
+
+declare %private function tfm:next-match(
+  $mode as function(node()*,function() as item()*?) as item()*,
+  $rules as (function(xs:string) as function(*)?)*,
+  $node as node(),
+  $params as function() as item()*?
+) as item()*
+{
+  let $r :=
+    fold-left(function($found, $r) {
+        if(exists($found)) then ($found,$r)
+        else if(try { $r("predicate")($node) } catch * { false() }) then $r
+        else ()
+      }, (), $rules)
+  let $matched-rule := head($r)
+  let $next-match := tfm:next-match($mode,tail($r),$node,?)
+  return
+    (: TBD template parameters - jpcs :)
+    if(exists($matched-rule)) then
+      $matched-rule("action")($mode,$node,$params,$next-match)
+    else (: default rule :)
+      typeswitch($node)
+        case element() | document-node() return $mode($node/node(),$params)
+        case attribute() | text() return text { $node }
+        default return ()
+};
+
+(:~
+ : Returns a rule constructed from the pattern and action specified.
+ : Rules are represented as a single function.
+ :
+ : &lt;p&gt;Action functions should take between 2 and 3 arguments. If the function takes
+ : fewer arguments, they are the arguments at the start of this list:
+ : &lt;ul&gt;
+ :   &lt;li&gt;$mode as function(node()*) as item()*:
+ : The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type
+ : function(node()*,function() as item()*?) as item()*, which accepts parameters as the second argument.&lt;/li&gt;
+ :   &lt;li&gt;$context as node(): The context node that the rule is executed on.&lt;/li&gt;
+ :   &lt;li&gt;$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.&lt;/li&gt;
+ :   &lt;li&gt;$next-match as function() as item()*: The next-mode function.
+ : Can alternately be specified as type function(function() as item()*?) as item()*,
+ : which accepts parameters as the second argument.&lt;/li&gt;
+ : &lt;/ul&gt;&lt;/p&gt;
+ :
+ : @param $pattern: The pattern string that the rule must match.
+ : @param $action: The action function to be executed when the rule is matched.
+ : @return The rule wrapped as a function.
+ :
+ : @see param#2, param#3
+ :)
+declare function tfm:rule(
+  $pattern as xs:string,
+  $action as function(*)
+) as function(xs:string) as function(*)?
+{
+  tfm:predicate-rule(tfm:pattern($pattern), $action)
+};
+
+(:~
+ : Returns a rule constructed from the pattern and action specified.
+ : Rules are represented as a single function.
+ :
+ : &lt;p&gt;Action functions should take between 2 and 3 arguments. If the function takes
+ : fewer arguments, they are the arguments at the start of this list:
+ : &lt;ul&gt;
+ :   &lt;li&gt;$mode as function(node()*) as item()*:
+ : The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type
+ : function(node()*,function() as item()*?) as item()*, which accepts parameters as the second argument.&lt;/li&gt;
+ :   &lt;li&gt;$context as node(): The context node that the rule is executed on.&lt;/li&gt;
+ :   &lt;li&gt;$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.&lt;/li&gt;
+ :   &lt;li&gt;$next-match as function() as item()*: The next-mode function.
+ : Can alternately be specified as type function(function() as item()*?) as item()*,
+ : which accepts parameters as the second argument.&lt;/li&gt;
+ : &lt;/ul&gt;&lt;/p&gt;
+ :
+ : @param $pattern: The pattern string that the rule must match.
+ : @param $action: The action function to be executed when the rule is matched.
+ : @param $resolver: Either an element from which to take the namespace bindings, or a function
+ : of type function(xs:string) as xs:QName.
+ : @return The rule wrapped as a function.
+ :
+ : @see param#2, param#3
+ :)
+declare function tfm:rule(
+  $pattern as xs:string,
+  $action as function(*),
+  $resolver as item()
+) as function(xs:string) as function(*)?
+{
+  tfm:predicate-rule(tfm:pattern($pattern,$resolver), $action)
+};
+
+(:~
+ : Returns a rule constructed from the predicate function and action specified.
+ : Rules are represented as a single function.
+ :
+ : &lt;p&gt;The predicate function takes a node as an argument and returns true if the node matches.
+ : Returning false or raising an error is considered a non-match. Typing the argument of the function
+ : provided with a SequenceType of element(), attribute(), etc. will result in the predicate function
+ : being optimized by only attempting to be matched against that type of name.&lt;/p&gt;
+ :
+ : &lt;p&gt;Action functions should take between 2 and 3 arguments. If the function takes
+ : fewer arguments, they are the arguments at the start of this list:
+ : &lt;ul&gt;
+ :   &lt;li&gt;$mode as function(node()*) as item()*:
+ : The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type
+ : function(node()*,function() as item()*?) as item()*, which accepts parameters as the second argument.&lt;/li&gt;
+ :   &lt;li&gt;$context as node(): The context node that the rule is executed on.&lt;/li&gt;
+ :   &lt;li&gt;$params as function() as item()*?: An rbtree.xq map of parameters passed to the mode,
+ : or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.&lt;/li&gt;
+ :   &lt;li&gt;$next-match as function() as item()*: The next-mode function.
+ : Can alternately be specified as type function(function() as item()*?) as item()*,
+ : which accepts parameters as the second argument.&lt;/li&gt;
+ : &lt;/ul&gt;&lt;/p&gt;
+ :
+ : @param $pattern: The pattern string that the rule must match.
+ : @param $action: The action function to be executed when the rule is matched.
+ : @param $resolver: Either an element from which to take the namespace bindings, or a function
+ : of type function(xs:string) as xs:QName which resolves a lexical QName to an xs:QName.
+ : @return The rule wrapped as a function.
+ :
+ : @see param#2, param#3
+ :)
+declare function tfm:predicate-rule(
+  $predicate as function(*),
+  $action as function(*)
+) as function(xs:string) as function(*)?
+{
+  let $action := tfm:check-action($action)
+  return
+    function($k as xs:string) as function(*)?
+    {
+      switch($k)
+        case "predicate" return $predicate
+        case "action" return $action
+        default return ()
+    }
+};
+
+(:~ Checks the action function signature, and converts to the expected signature :)
+declare %private function tfm:check-action(
+  $action as function(*)
+) as function(
+  function(node()*,function() as item()*?) as item()*,
+  node(),
+  function() as item()*?,
+  function(function() as item()*?) as item()*
+) as item()*
+{
+  typeswitch($action)
+    (: 2 args, no params :)
+    case function(
+          function(node()*) as item()*,
+          node()
+        ) as item()*
+      return function(
+          $mode as function(node()*,function() as item()*?) as item()*,
+          $node as node(),
+          $params as function() as item()*?,
+          $next-match as function(function() as item()*?) as item()*
+        ) as item()*
+        {
+          $action($mode(?,()),$node)
         }
-	* html #footer {
-	height:1px;
-	}
-        iframe {
-        border-top: #c00 1px dotted;
-        border-right: #c00 2px dotted;
-        border-left: #c00 2px dotted;
-        border-bottom: #c00 4px dotted;
+    (: 2 args, params :)
+    case function(
+          function(node()*,function() as item()*?) as item()*,
+          node()
+        ) as item()*
+      return function(
+          $mode as function(node()*,function() as item()*?) as item()*,
+          $node as node(),
+          $params as function() as item()*?,
+          $next-match as function(function() as item()*?) as item()*
+        ) as item()*
+        {
+          $action($mode,$node)
         }
-        </style><link rel="stylesheet" type="text/css" href="lib/prettify.css"> </link><script src="lib/prettify.js" type="lib/javascript">  </script><script src="lib/lang-xq.js" type="text/javascript">  </script></head><body><div id="wrap"><div id="sidebar"><ul><li><a href="xqdoc_transform.xq_test.xq.html" target="docs">/transform.xq/test.xq</a></li><li><a href="xqdoc_transform.xq_transform.xq.html" target="docs">/transform.xq/transform.xq</a></li><li><a href="xqdoc_transform.xq_lib_compile_pattern.xq.html" target="docs">/transform.xq/lib/compile_pattern.xq</a></li><li><a href="xqdoc_transform.xq_lib_map.xq.html" target="docs">/transform.xq/lib/map.xq</a></li><li><a href="xqdoc_transform.xq_lib_patterns.xq.html" target="docs">/transform.xq/lib/patterns.xq</a></li><li><a href="xqdoc_transform.xq_lib_rbtree.xq.html" target="docs">/transform.xq/lib/rbtree.xq</a></li><li><a href="xqdoc_transform.xq_samples_extend-mode.xq.html" target="docs">/transform.xq/samples/extend-mode.xq</a></li><li><a href="xqdoc_transform.xq_samples_mode.xq.html" target="docs">/transform.xq/samples/mode.xq</a></li><li><a href="xqdoc_transform.xq_samples_named-extend-mode.xq.html" target="docs">/transform.xq/samples/named-extend-mode.xq</a></li><li><a href="xqdoc_transform.xq_samples_named-mode.xq.html" target="docs">/transform.xq/samples/named-mode.xq</a></li><li><a href="xqdoc_transform.xq_samples_parameters.xq.html" target="docs">/transform.xq/samples/parameters.xq</a></li><li><a href="xqdoc_transform.xq_samples_pattern.xq.html" target="docs">/transform.xq/samples/pattern.xq</a></li><li><a href="xqdoc_transform.xq_samples_priority.xq.html" target="docs">/transform.xq/samples/priority.xq</a></li></ul></div><div id="main"><iframe name="docs" style="height:100%;width:100%;border: 0px solid #ffffff; "/></div><div id="footer"><i/> |
-                generated by xquerydoc <a href="https://github.com/xquery/xquerydoc" target="xquerydoc">https://github.com/xquery/xquerydoc</a></div></div><script type="application/javascript">
+    (: 3 args, no params :)
+    case function(
+          function(node()*) as item()*,
+          node(),
+          function() as item()+
+        ) as item()*
+      return function(
+          $mode as function(node()*,function() as item()*?) as item()*,
+          $node as node(),
+          $params as function() as item()*?,
+          $next-match as function(function() as item()*?) as item()*
+        ) as item()*
+        {
+          $action($mode(?,()),$node,$params)
+        }
+    (: 3 args, params :)
+    case function(
+          function(node()*,function() as item()*?) as item()*,
+          node(),
+          function() as item()+
+        ) as item()*
+      return function(
+          $mode as function(node()*,function() as item()*?) as item()*,
+          $node as node(),
+          $params as function() as item()*?,
+          $next-match as function(function() as item()*?) as item()*
+        ) as item()*
+        {
+          $action($mode,$node,$params)
+        }
+    (: 4 args, no params :)
+    case function(
+          function(node()*,function() as item()*?) as item()*,
+          node(),
+          function() as item()*?,
+          function() as item()*
+        ) as item()*
+      return function(
+          $mode as function(node()*,function() as item()*?) as item()*,
+          $node as node(),
+          $params as function() as item()*?,
+          $next-match as function(function() as item()*?) as item()*
+        ) as item()*
+        {
+          $action($mode(?,()),$node,$params,function() { $next-match(()) })
+        }
+    (: 4 args, params :)
+    case function(
+          function(node()*,function() as item()*?) as item()*,
+          node(),
+          function() as item()*?,
+          function(function() as item()*?) as item()*
+        ) as item()*
+      return $action
+    default return error(xs:QName("tfm:BADACTION"),
+      "The action function has the wrong function signature")
+};
+
+(:~
+ : Returns a prefix resolver function that resolves prefixes by looking them up in the namespace
+ : bindings of the element.
+ :
+ : @param $element: The element whose namespace bindings should be used.
+ : @return The resolver function.
+ :)
+declare function tfm:resolver(
+  $element as element()
+) as function(xs:string) as xs:QName
+{
+  resolve-QName(?, $element)
+};
+
+(:~
+ : Compiles the pattern given in the string argument to a predicate function,
+ : which takes a node as the argument, and returns true if the node matches
+ : the pattern. If the predicate returns false or raises an error, the node
+ : does not match the pattern.
+ :
+ : @param $pattern: The pattern string.
+ : @return The predicate function.
+ :)
+declare function tfm:pattern(
+  $pattern as xs:string
+) as function(*)
+{
+  let $ns := &lt;ns
+      xmlns:fn="http://www.w3.org/2005/xpath-functions"
+      xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    /&gt;
+  return tfm:pattern($pattern,$ns)
+};
+
+(:~
+ : Compiles the pattern given in the string argument to a predicate function,
+ : which takes a node as the argument, and returns true if the node matches
+ : the pattern. If the predicate returns false or raises an error, the node
+ : does not match the pattern.
+ :
+ : @param $pattern: The pattern string.
+ : @param $resolver: Either an element from which to take the namespace bindings, or a function
+ : of type function(xs:string) as xs:QName which resolves a lexical QName to an xs:QName.
+ : @return The predicate function.
+ :)
+declare function tfm:pattern(
+  $pattern as xs:string,
+  $resolver as item()
+) as function(*)
+{
+  let $r :=
+    typeswitch($resolver)
+      case function(xs:string) as xs:QName return $resolver
+      case $e as element() return tfm:resolver($e)
+      default return error(xs:QName("tfm:BADRESOLVER"),
+        "The resolver should either be of type element() or function(xs:string) as xs:QName")
+  return pat:compile-pattern($pattern, $r)
+};
+
+(:~
+ : Helper function to allow simple construction of a parameters map suitable for passing
+ : to a mode function, given the parameter name and value.
+ :
+ : @param $name: The parameter name.
+ : @param $value: The parameter value.
+ : @return An rbtree.xq map containing the parameter.
+ :)
+declare function tfm:param(
+  $name as xs:string,
+  $value as item()*
+) as function() as item()*
+{
+  map:put(map:create(),$name,$value)
+};
+
+(:~
+ : Helper function to allow simple construction of a parameters map suitable for passing
+ : to a mode function, given an existing map, the parameter name, and value.
+ :
+ : @param $params: An existing rbtree.xq map of parameters, or the empty sequence.
+ : @param $name: The parameter name.
+ : @param $value: The parameter value.
+ : @return An rbtree.xq map containing the original parameters augmeneted with the new parameter.
+ :)
+declare function tfm:param(
+  $params as function() as item()*?,
+  $name as xs:string,
+  $value as item()*
+) as function() as item()*
+{
+  let $params := if(empty($params)) then map:create() else $params
+  return map:put($params,$name,$value)
+};
+
+(:~
+ : Helper function to retrive a parameter from a parameters map.
+ :
+ : @param $params: An existing rbtree.xq map of parameters, or the empty sequence.
+ : @param $name: The parameter name.
+ : @return The parameter value, or empty sequence if not found.
+ :)
+declare function tfm:get-param(
+  $params as function() as item()*?,
+  $name as xs:string
+) as item()*
+{
+  if(empty($params)) then () else map:get($params,$name)
+};
+</pre></div><br/><div class="footer"><p style="text-align:right"><i/> |
+          generated by xquerydoc <a href="https://github.com/xquery/xquerydoc" target="xquerydoc">https://github.com/xquery/xquerydoc</a></p></div></div><script type="application/javascript">
 	  window.onload = function(){ prettyPrint(); }
 	</script></body></html>

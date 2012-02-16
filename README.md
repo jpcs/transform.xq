@@ -79,7 +79,7 @@ Mode functions take the following arguments:
 * $params as function() as item()\*?: An rbtree.xq map of parameters passed to the mode,  or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.  
    
 
- If reflection capabilites are not supported by your XQuery  implementation.   
+
 #### Params
 
 * name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
@@ -87,6 +87,9 @@ Mode functions take the following arguments:
 
 #### Returns
 *  function(node()\*,function() as item()\*?) as item()\*: A mode function.
+
+#### Errors
+ If reflection capabilites are not supported by your XQuery  implementation.   
 
 ### <a name="func_named-extend-mode_2"/> named-extend-mode\#2
 ```xquery
@@ -103,7 +106,7 @@ Mode functions take the following arguments:
 * $params as function() as item()\*?: An rbtree.xq map of parameters passed to the mode,  or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.  
    
 
- If reflection capabilites are not supported by your XQuery  implementation.   
+
 #### Params
 
 * mode as  function(node()\*,function() as item()\*?) as item()\*: The mode to extend.
@@ -114,6 +117,9 @@ Mode functions take the following arguments:
 #### Returns
 *  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
+#### Errors
+ If reflection capabilites are not supported by your XQuery  implementation.   
+
 ### <a name="func_named-rules_1"/> named-rules\#1
 ```xquery
 named-rules(
@@ -122,7 +128,7 @@ named-rules(
 ```
   Returns a sequence of rules constructed from the functions  annotated with the given name(s) in the %tfm:rule() annotation.   
 
- If reflection capabilites are not supported by your XQuery  implementation. 
+
 #### Params
 
 * name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
@@ -130,6 +136,9 @@ named-rules(
 
 #### Returns
 *  (function(xs:string) as function(\*)?)\*: A sequence of rules wrapped as functions, in increasing order by the priority from the %tfm:rule annotation.
+
+#### Errors
+ If reflection capabilites are not supported by your XQuery  implementation. 
 
 ### <a name="func_rule_2"/> rule\#2
 ```xquery
