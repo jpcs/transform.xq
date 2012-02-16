@@ -12,10 +12,16 @@ Version:  0.9
 
 ### mode\#1
     mode(
-      $rules as (function(xs:string) as function(*)?)*) as  function(node()*) as item()*
+      $rules as (function(xs:string) as function(*)?)*) as  function(node()*,function() as item()*?) as item()*
 
   Returns a mode function, which can be called to perform the transformation  specified by the rules passed in as arguments. Call tfm:rule(), or  tfm:predicate-rule() to create rules to pass into this function.   
 
+Mode functions take the following arguments:  
+    
+* $nodes as node()\*: The context nodes to execute the mode on.    
+* $params as function() as item()\*?: An rbtree.xq map of parameters passed to the mode,  or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.  
+   
+
 
 #### Params
 
@@ -23,58 +29,76 @@ Version:  0.9
 
 
 #### Returns
-*  function(node()\*) as item()\*: A mode function.
+*  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
 ### extend-mode\#2
     extend-mode(
-      $mode as function(node()*) as item()*,
-      $rules as (function(xs:string) as function(*)?)*) as  function(node()*) as item()*
+      $mode as function(node()*,function() as item()*?) as item()*,
+      $rules as (function(xs:string) as function(*)?)*) as  function(node()*,function() as item()*?) as item()*
 
   Returns a new mode function, which extends the transformation from the  mode argument, adding the additional rules in higher precedence.  Call tfm:rule(), or tfm:predicate-rule() to create rules to pass into  this function.   
+
+Mode functions take the following arguments:  
+    
+* $nodes as node()\*: The context nodes to execute the mode on.    
+* $params as function() as item()\*?: An rbtree.xq map of parameters passed to the mode,  or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.  
+   
 
 
 #### Params
 
-* mode as  function(node()\*) as item()\*: The mode to extend.
+* mode as  function(node()\*,function() as item()\*?) as item()\*: The mode to extend.
 
 * rules as  (function(xs:string) as function(\*)?)\*: The sequence of rules to use to create the mode, in increasing precedence.
 
 
 #### Returns
-*  function(node()\*) as item()\*: A mode function.
+*  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
 ### named-mode\#1
     named-mode(
-      $name as xs:string*) as  function(node()*) as item()*
+      $name as xs:string*) as  function(node()*,function() as item()*?) as item()*
 
   Returns a mode function constructed from the functions  annotated with the given name in the %tfm:rule() annotation.   
 
- If reflection capabilites are not supported by your XQuery  implementation. 
+Mode functions take the following arguments:  
+    
+* $nodes as node()\*: The context nodes to execute the mode on.    
+* $params as function() as item()\*?: An rbtree.xq map of parameters passed to the mode,  or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.  
+   
+
+ If reflection capabilites are not supported by your XQuery  implementation.   
 #### Params
 
 * name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
 
 
 #### Returns
-*  function(node()\*) as item()\*: A mode function.
+*  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
 ### named-extend-mode\#2
     named-extend-mode(
-      $mode as function(node()*) as item()*,
-      $name as xs:string*) as  function(node()*) as item()*
+      $mode as function(node()*,function() as item()*?) as item()*,
+      $name as xs:string*) as  function(node()*,function() as item()*?) as item()*
 
   Returns a new mode function, which extends the transformation from the  mode argument, adding additional rules constructed from the functions  annotated with the given name in the %tfm:rule() annotation.   
 
- If reflection capabilites are not supported by your XQuery  implementation. 
+Mode functions take the following arguments:  
+    
+* $nodes as node()\*: The context nodes to execute the mode on.    
+* $params as function() as item()\*?: An rbtree.xq map of parameters passed to the mode,  or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.  
+   
+
+ If reflection capabilites are not supported by your XQuery  implementation.   
 #### Params
 
-* mode as  function(node()\*) as item()\*: The mode to extend.
+* mode as  function(node()\*,function() as item()\*?) as item()\*: The mode to extend.
 
 * name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
 
 
 #### Returns
-*  function(node()\*) as item()\*: A mode function.
+*  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
 ### named-rules\#1
     named-rules(
@@ -100,9 +124,10 @@ Version:  0.9
 
 Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:  
     
-* $mode as function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
+* $mode as function(node()\*) as item()\*:  The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type  function(node()\*,function() as item()\*?) as item()\*, which accepts parameters as the second argument.    
 * $context as node(): The context node that the rule is executed on.    
-* $next-match as function() as item()\*: The next-mode function.  
+* $params as function() as item()\*?: An rbtree.xq map of parameters passed to the mode,  or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.    
+* $next-match as function() as item()\*: The next-mode function.  Can alternately be specified as type function(function() as item()\*?) as item()\*,  which accepts parameters as the second argument.  
    
 
 
@@ -126,9 +151,10 @@ Action functions should take between 2 and 3 arguments. If the function takes  f
 
 Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:  
     
-* function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
-* node(): The context node that the rule is executed on.    
-* $next-match as function() as item()\*: The next-mode function.  
+* $mode as function(node()\*) as item()\*:  The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type  function(node()\*,function() as item()\*?) as item()\*, which accepts parameters as the second argument.    
+* $context as node(): The context node that the rule is executed on.    
+* $params as function() as item()\*?: An rbtree.xq map of parameters passed to the mode,  or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.    
+* $next-match as function() as item()\*: The next-mode function.  Can alternately be specified as type function(function() as item()\*?) as item()\*,  which accepts parameters as the second argument.  
    
 
 
@@ -156,9 +182,10 @@ The predicate function takes a node as an argument and returns true if the node 
 
 Action functions should take between 2 and 3 arguments. If the function takes  fewer arguments, they are the arguments at the start of this list:  
     
-* function(node()\*) as item()\*: The mode function, used to re-apply the mode on further nodes.    
-* node(): The context node that the rule is executed on.    
-* $next-match as function() as item()\*: The next-mode function.  
+* $mode as function(node()\*) as item()\*:  The mode function, used to re-apply the mode on further nodes. Can alternately be specified as type  function(node()\*,function() as item()\*?) as item()\*, which accepts parameters as the second argument.    
+* $context as node(): The context node that the rule is executed on.    
+* $params as function() as item()\*?: An rbtree.xq map of parameters passed to the mode,  or the empty sequence. Can be constructed by tfm:param#2 and tfm:param#3.    
+* $next-match as function() as item()\*: The next-mode function.  Can alternately be specified as type function(function() as item()\*?) as item()\*,  which accepts parameters as the second argument.  
    
 
 
@@ -219,6 +246,63 @@ Action functions should take between 2 and 3 arguments. If the function takes  f
 
 #### Returns
 *  function(\*): The predicate function.
+
+### param\#2
+    param(
+      $name as xs:string,
+      $value as item()*) as  function() as item()*
+
+  Helper function to allow simple construction of a parameters map suitable for passing  to a mode function, given the parameter name and value.   
+
+
+#### Params
+
+* name as  xs:string: The parameter name.
+
+* value as  item()\*: The parameter value.
+
+
+#### Returns
+*  function() as item()\*: An rbtree.xq map containing the parameter.
+
+### param\#3
+    param(
+      $params as function() as item()*?,
+      $name as xs:string,
+      $value as item()*) as  function() as item()*
+
+  Helper function to allow simple construction of a parameters map suitable for passing  to a mode function, given an existing map, the parameter name, and value.   
+
+
+#### Params
+
+* params as  function() as item()\*?: An existing rbtree.xq map of parameters, or the empty sequence.
+
+* name as  xs:string: The parameter name.
+
+* value as  item()\*: The parameter value.
+
+
+#### Returns
+*  function() as item()\*: An rbtree.xq map containing the original parameters augmeneted with the new parameter.
+
+### get-param\#2
+    get-param(
+      $params as function() as item()*?,
+      $name as xs:string) as  item()*
+
+  Helper function to retrive a parameter from a parameters map.   
+
+
+#### Params
+
+* params as  function() as item()\*?: An existing rbtree.xq map of parameters, or the empty sequence.
+
+* name as  xs:string: The parameter name.
+
+
+#### Returns
+*  item()\*: The parameter value, or empty sequence if not found.
 
 
 
