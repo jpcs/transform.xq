@@ -11,7 +11,7 @@ Version:  0.9
 
 ## Table of Contents
 
-* Functions: [mode\#1](#func_mode_1), [extend-mode\#2](#func_extend-mode_2), [named-mode\#1](#func_named-mode_1), [named-extend-mode\#2](#func_named-extend-mode_2), [named-rules\#1](#func_named-rules_1), [functions\#0](#func_functions_0), [annotation\#0](#func_annotation_0), [add-rule\#2](#func_add-rule_2), [add\#3](#func_add_3), [run-mode\#3](#func_run-mode_3), [apply-templates\#3](#func_apply-templates_3), [next-match\#4](#func_next-match_4), [rule\#2](#func_rule_2), [rule\#3](#func_rule_3), [predicate-rule\#2](#func_predicate-rule_2), [check-action\#1](#func_check-action_1), [resolver\#1](#func_resolver_1), [pattern\#1](#func_pattern_1), [pattern\#2](#func_pattern_2), [param\#2](#func_param_2), [param\#3](#func_param_3), [get-param\#2](#func_get-param_2)
+* Functions: [mode\#1](#func_mode_1), [extend-mode\#2](#func_extend-mode_2), [named-mode\#1](#func_named-mode_1), [named-extend-mode\#2](#func_named-extend-mode_2), [named-rules\#1](#func_named-rules_1), [rule\#2](#func_rule_2), [rule\#3](#func_rule_3), [predicate-rule\#2](#func_predicate-rule_2), [resolver\#1](#func_resolver_1), [pattern\#1](#func_pattern_1), [pattern\#2](#func_pattern_2), [param\#2](#func_param_2), [param\#3](#func_param_3), [get-param\#2](#func_get-param_2)
 
 
 ## Functions
