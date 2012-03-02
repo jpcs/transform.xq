@@ -11,14 +11,14 @@ Version:  0.9
 
 ## Table of Contents
 
-* Functions: [mode\#1](#func_mode_1), [extend-mode\#2](#func_extend-mode_2), [named-mode\#1](#func_named-mode_1), [named-extend-mode\#2](#func_named-extend-mode_2), [named-rules\#1](#func_named-rules_1), [rule\#2](#func_rule_2), [rule\#3](#func_rule_3), [predicate-rule\#2](#func_predicate-rule_2), [resolver\#1](#func_resolver_1), [pattern\#1](#func_pattern_1), [pattern\#2](#func_pattern_2), [param\#2](#func_param_2), [param\#3](#func_param_3), [get-param\#2](#func_get-param_2)
+* Functions: [tfm:mode\#1](#func_tfm_mode_1), [tfm:extend-mode\#2](#func_tfm_extend-mode_2), [tfm:named-mode\#1](#func_tfm_named-mode_1), [tfm:named-extend-mode\#2](#func_tfm_named-extend-mode_2), [tfm:named-rules\#1](#func_tfm_named-rules_1), [tfm:rule\#2](#func_tfm_rule_2), [tfm:rule\#3](#func_tfm_rule_3), [tfm:predicate-rule\#2](#func_tfm_predicate-rule_2), [tfm:resolver\#1](#func_tfm_resolver_1), [tfm:pattern\#1](#func_tfm_pattern_1), [tfm:pattern\#2](#func_tfm_pattern_2), [tfm:param\#2](#func_tfm_param_2), [tfm:param\#3](#func_tfm_param_3), [tfm:get-param\#2](#func_tfm_get-param_2)
 
 
 ## Functions
 
-### <a name="func_mode_1"/> mode\#1
+### <a name="func_tfm_mode_1"/> tfm:mode\#1
 ```xquery
-mode(
+tfm:mode(
   $rules as (function(xs:string) as function(*)?)*
 ) as  function(node()*,function() as item()*?) as item()*
 ```
@@ -33,15 +33,15 @@ Mode functions take the following arguments:
 
 #### Params
 
-* rules as  (function(xs:string) as function(\*)?)\*: The sequence of rules to use to create the mode, in increasing precedence.
+* $rules as  (function(xs:string) as function(\*)?)\*: The sequence of rules to use to create the mode, in increasing precedence.
 
 
 #### Returns
 *  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
-### <a name="func_extend-mode_2"/> extend-mode\#2
+### <a name="func_tfm_extend-mode_2"/> tfm:extend-mode\#2
 ```xquery
-extend-mode(
+tfm:extend-mode(
   $mode as function(node()*,function() as item()*?) as item()*,
   $rules as (function(xs:string) as function(*)?)*
 ) as  function(node()*,function() as item()*?) as item()*
@@ -57,17 +57,17 @@ Mode functions take the following arguments:
 
 #### Params
 
-* mode as  function(node()\*,function() as item()\*?) as item()\*: The mode to extend.
+* $mode as  function(node()\*,function() as item()\*?) as item()\*: The mode to extend.
 
-* rules as  (function(xs:string) as function(\*)?)\*: The sequence of rules to use to create the mode, in increasing precedence.
+* $rules as  (function(xs:string) as function(\*)?)\*: The sequence of rules to use to create the mode, in increasing precedence.
 
 
 #### Returns
 *  function(node()\*,function() as item()\*?) as item()\*: A mode function.
 
-### <a name="func_named-mode_1"/> named-mode\#1
+### <a name="func_tfm_named-mode_1"/> tfm:named-mode\#1
 ```xquery
-named-mode(
+tfm:named-mode(
   $name as xs:string*
 ) as  function(node()*,function() as item()*?) as item()*
 ```
@@ -82,7 +82,7 @@ Mode functions take the following arguments:
 
 #### Params
 
-* name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
+* $name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
 
 
 #### Returns
@@ -91,9 +91,9 @@ Mode functions take the following arguments:
 #### Errors
  If reflection capabilites are not supported by your XQuery  implementation.   
 
-### <a name="func_named-extend-mode_2"/> named-extend-mode\#2
+### <a name="func_tfm_named-extend-mode_2"/> tfm:named-extend-mode\#2
 ```xquery
-named-extend-mode(
+tfm:named-extend-mode(
   $mode as function(node()*,function() as item()*?) as item()*,
   $name as xs:string*
 ) as  function(node()*,function() as item()*?) as item()*
@@ -109,9 +109,9 @@ Mode functions take the following arguments:
 
 #### Params
 
-* mode as  function(node()\*,function() as item()\*?) as item()\*: The mode to extend.
+* $mode as  function(node()\*,function() as item()\*?) as item()\*: The mode to extend.
 
-* name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
+* $name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
 
 
 #### Returns
@@ -120,9 +120,9 @@ Mode functions take the following arguments:
 #### Errors
  If reflection capabilites are not supported by your XQuery  implementation.   
 
-### <a name="func_named-rules_1"/> named-rules\#1
+### <a name="func_tfm_named-rules_1"/> tfm:named-rules\#1
 ```xquery
-named-rules(
+tfm:named-rules(
   $name as xs:string*
 ) as  (function(xs:string) as function(*)?)*
 ```
@@ -131,7 +131,7 @@ named-rules(
 
 #### Params
 
-* name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
+* $name as  xs:string\*: The name(s) used in the %tfm:rule() annotation in the functions for the mode to construct.
 
 
 #### Returns
@@ -140,9 +140,9 @@ named-rules(
 #### Errors
  If reflection capabilites are not supported by your XQuery  implementation. 
 
-### <a name="func_rule_2"/> rule\#2
+### <a name="func_tfm_rule_2"/> tfm:rule\#2
 ```xquery
-rule(
+tfm:rule(
   $pattern as xs:string,
   $action as function(*)
 ) as  function(xs:string) as function(*)?
@@ -160,17 +160,17 @@ Action functions should take between 2 and 3 arguments. If the function takes  f
 
 #### Params
 
-* pattern as  xs:string: The pattern string that the rule must match.
+* $pattern as  xs:string: The pattern string that the rule must match.
 
-* action as  function(\*): The action function to be executed when the rule is matched.
+* $action as  function(\*): The action function to be executed when the rule is matched.
 
 
 #### Returns
 *  function(xs:string) as function(\*)?: The rule wrapped as a function.
 
-### <a name="func_rule_3"/> rule\#3
+### <a name="func_tfm_rule_3"/> tfm:rule\#3
 ```xquery
-rule(
+tfm:rule(
   $pattern as xs:string,
   $action as function(*),
   $resolver as item()
@@ -189,19 +189,19 @@ Action functions should take between 2 and 3 arguments. If the function takes  f
 
 #### Params
 
-* pattern as  xs:string: The pattern string that the rule must match.
+* $pattern as  xs:string: The pattern string that the rule must match.
 
-* action as  function(\*): The action function to be executed when the rule is matched.
+* $action as  function(\*): The action function to be executed when the rule is matched.
 
-* resolver as  item(): Either an element from which to take the namespace bindings, or a function of type function(xs:string) as xs:QName.
+* $resolver as  item(): Either an element from which to take the namespace bindings, or a function of type function(xs:string) as xs:QName.
 
 
 #### Returns
 *  function(xs:string) as function(\*)?: The rule wrapped as a function.
 
-### <a name="func_predicate-rule_2"/> predicate-rule\#2
+### <a name="func_tfm_predicate-rule_2"/> tfm:predicate-rule\#2
 ```xquery
-predicate-rule(
+tfm:predicate-rule(
   $predicate as function(*),
   $action as function(*)
 ) as  function(xs:string) as function(*)?
@@ -222,17 +222,17 @@ Action functions should take between 2 and 3 arguments. If the function takes  f
 
 #### Params
 
-* predicate as  function(\*)
+* $predicate as  function(\*)
 
-* action as  function(\*): The action function to be executed when the rule is matched.
+* $action as  function(\*): The action function to be executed when the rule is matched.
 
 
 #### Returns
 *  function(xs:string) as function(\*)?: The rule wrapped as a function.
 
-### <a name="func_resolver_1"/> resolver\#1
+### <a name="func_tfm_resolver_1"/> tfm:resolver\#1
 ```xquery
-resolver(
+tfm:resolver(
   $element as element()
 ) as  function(xs:string) as xs:QName
 ```
@@ -241,15 +241,15 @@ resolver(
 
 #### Params
 
-* element as  element(): The element whose namespace bindings should be used.
+* $element as  element(): The element whose namespace bindings should be used.
 
 
 #### Returns
 *  function(xs:string) as xs:QName: The resolver function.
 
-### <a name="func_pattern_1"/> pattern\#1
+### <a name="func_tfm_pattern_1"/> tfm:pattern\#1
 ```xquery
-pattern(
+tfm:pattern(
   $pattern as xs:string
 ) as  function(*)
 ```
@@ -258,15 +258,15 @@ pattern(
 
 #### Params
 
-* pattern as  xs:string: The pattern string.
+* $pattern as  xs:string: The pattern string.
 
 
 #### Returns
 *  function(\*): The predicate function.
 
-### <a name="func_pattern_2"/> pattern\#2
+### <a name="func_tfm_pattern_2"/> tfm:pattern\#2
 ```xquery
-pattern(
+tfm:pattern(
   $pattern as xs:string,
   $resolver as item()
 ) as  function(*)
@@ -276,17 +276,17 @@ pattern(
 
 #### Params
 
-* pattern as  xs:string: The pattern string.
+* $pattern as  xs:string: The pattern string.
 
-* resolver as  item(): Either an element from which to take the namespace bindings, or a function of type function(xs:string) as xs:QName which resolves a lexical QName to an xs:QName.
+* $resolver as  item(): Either an element from which to take the namespace bindings, or a function of type function(xs:string) as xs:QName which resolves a lexical QName to an xs:QName.
 
 
 #### Returns
 *  function(\*): The predicate function.
 
-### <a name="func_param_2"/> param\#2
+### <a name="func_tfm_param_2"/> tfm:param\#2
 ```xquery
-param(
+tfm:param(
   $name as xs:string,
   $value as item()*
 ) as  function() as item()*
@@ -296,17 +296,17 @@ param(
 
 #### Params
 
-* name as  xs:string: The parameter name.
+* $name as  xs:string: The parameter name.
 
-* value as  item()\*: The parameter value.
+* $value as  item()\*: The parameter value.
 
 
 #### Returns
 *  function() as item()\*: An rbtree.xq map containing the parameter.
 
-### <a name="func_param_3"/> param\#3
+### <a name="func_tfm_param_3"/> tfm:param\#3
 ```xquery
-param(
+tfm:param(
   $params as function() as item()*?,
   $name as xs:string,
   $value as item()*
@@ -317,19 +317,19 @@ param(
 
 #### Params
 
-* params as  function() as item()\*?: An existing rbtree.xq map of parameters, or the empty sequence.
+* $params as  function() as item()\*?: An existing rbtree.xq map of parameters, or the empty sequence.
 
-* name as  xs:string: The parameter name.
+* $name as  xs:string: The parameter name.
 
-* value as  item()\*: The parameter value.
+* $value as  item()\*: The parameter value.
 
 
 #### Returns
 *  function() as item()\*: An rbtree.xq map containing the original parameters augmeneted with the new parameter.
 
-### <a name="func_get-param_2"/> get-param\#2
+### <a name="func_tfm_get-param_2"/> tfm:get-param\#2
 ```xquery
-get-param(
+tfm:get-param(
   $params as function() as item()*?,
   $name as xs:string
 ) as  item()*
@@ -339,9 +339,9 @@ get-param(
 
 #### Params
 
-* params as  function() as item()\*?: An existing rbtree.xq map of parameters, or the empty sequence.
+* $params as  function() as item()\*?: An existing rbtree.xq map of parameters, or the empty sequence.
 
-* name as  xs:string: The parameter name.
+* $name as  xs:string: The parameter name.
 
 
 #### Returns
